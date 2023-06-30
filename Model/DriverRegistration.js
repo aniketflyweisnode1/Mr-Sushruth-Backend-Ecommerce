@@ -5,7 +5,7 @@ const crypto = require("crypto");
 
 
 const Driver = mongoose.Schema({
-    Name: {
+    name: {
         type: String, 
         require: false
     }, 
@@ -32,9 +32,13 @@ const Driver = mongoose.Schema({
     status: {
         type: String,
         default: "disapprove"
+    },
+    role: {
+        type: String,
+        role:"driver"
     }
 })
 
 const driver  = mongoose.model('driver', Driver);
 
-module.exports = driver
+module.exports = driver;

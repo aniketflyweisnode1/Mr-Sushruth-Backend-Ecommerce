@@ -15,28 +15,27 @@ class ApiFeatures {
       : {};
 
     this.query = this.query.find({ ...keyword });
-    // this.query = this.query.aggregate([
-    //   {
-    //     $match: { ...keyword },
-    //   },
-    //   {
-    //     $group:{
-    //       "category":"$category.parentCategory",
-    //       "images":"$images.url",
-    //       "productId":"$_id"
-    //     }
-    //   },
-    //   {
-    //     $project:{
-    //       "id":"$productId",
-    //       "rating":1,
-    //       "name":1,
-    //       "price":1,
-    //       "category":"$category",
-
-    //     }
-    //   }
-    // ]);
+    this.query = this.query.aggregate([
+      {
+        $match: { ...keyword },
+      },
+      {
+        $group:{
+          "category":"$category.parentCategory",
+          "images":"$images.url",
+          "productId":"$_id"
+        }
+      },
+      {
+        $project:{
+          "id":"$productId",
+          "rating":1,
+          "name":1,
+          "price":1,
+          "category":"$category",
+        }
+      }
+    ]);
     return this;
   }
 

@@ -11,6 +11,7 @@ const {
 
 const router = require("express").Router();
 
+
 router.post("/create", registerUser);
 router.put("/email/:id", registerEmailUser);
 router.put("/mobile/:id", UpdatePhoneUser);

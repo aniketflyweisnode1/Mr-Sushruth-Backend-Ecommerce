@@ -2,6 +2,7 @@ const driver = require('../Model/DriverRegistration');
 const order = require('../Model/ShoppingCartOrderModel');
 const User = require('../Model/userModel')
 const DriverOrder = require('../Model/Driver-OrderModel')
+
 const rejectOrder = require('../Model/RejectReasonsModel')
 const address = require('../Model/addressModel')
 const bcrypt = require("bcryptjs");
@@ -11,88 +12,113 @@ const otpHelper = require("../utils/OTP-Generate");
 const { error } = require('console');
 const product = require('../Model/productModel')
 const JWTkey = process.env.JWT_SECRET
+const OTP = require("../utils/OTP-Generate")
 
 exports.sendOtp = async (req, res) => {
-    try{
-      const Data = await driver.findOne({phone: req.body.phone})
-      if(!Data){
-        const otp = await  otpHelper.generateOTP(4);
-        const data =  await driver.create({
-            phone: req.body.phone,
-           otp: otp,
-         });
-        return res.status(200).json({
-           otp: data.otp,
-         })
-      }else{
-      const otp = await  otpHelper.generateOTP(4);
-     const data =  await driver.updateOne({_id: Data._id},{
-      otp: otp
-      }, {new:true});
-      res.status(200).json({
-        otp: otp,
-      })
-    }
+    try {
+        const Data = await driver.findOne({ phone: req.body.phone })
+        if (!Data) {
+            const otp = await otpHelper.generateOTP(4);
+            const data = await driver.create({
+                phone: req.body.phone,
+                otp: otp,
+            });
+            return res.status(200).json({
+                otp: data.otp,
+            })
+        } else {
+            const otp = await otpHelper.generateOTP(4);
+            const data = await driver.updateOne({ _id: Data._id }, {
+                otp: otp
+            }, { new: true });
+            res.status(200).json({
+                otp: otp,
+            })
+        }
     } catch (error) {
         console.log(error);
-      throw error;
+        throw error;
     }
-  }
+}
 
 
 exports.accountVerificationOTP = async (req, res, next) => {
-    try{
-    const user = await driver.findOne({
-      otp: req.body.otp
-    })
-  
-    console.log("user",user)
-    if(!user) {
-      return next(new ErrorHander("Invalid OTP!", 400))
-    }
-   const token =  jwt.sign(
-      { user_id: user._id },
-      JWTkey,
-    );
-    res.status(200).json({
-      token : token,
-      Id : user._id
-    })
-    
-  }catch(err){
-    console.log(error)
-    res.status(400).json({
-      message: err.message
-    })
-  }
-  };
+    try {
+        const user = await driver.findOne({
+            otp: req.body.otp
+        })
 
-exports.AddDeriverDetails = async(req,res) => {
-    try{
-const data = {
-    Name: req.body.Name, 
-    password: bcrypt.hashSync(req.body.password, 8),
-    email: req.body.email, 
-    image: req.body.image, 
-} 
- const Data = await driver.findOne({email: req.body.email})
- if(Data){
-    return res.status(201).json({
-        message: "Email is Already regtration"
-    })
- }else{
-    const data = await driver.findOneAndUpdate({_id: req.params.id}, {
-        Name: req.body.Name, 
-        password: bcrypt.hashSync(req.body.password, 8),
-        email: req.body.email, 
-        image: req.body.image, 
-    }, {new: true});
-    res.status(200).json({
-        success: true, 
-        details : data
-    })
- }
-}catch(err){
+        console.log("user", user)
+        if (!user) {
+            return next(new ErrorHander("Invalid OTP!", 400))
+        }
+        const token = jwt.sign(
+            { user_id: user._id },
+            JWTkey,
+        );
+        res.status(200).json({
+            token: token,
+            Id: user._id
+        })
+
+    } catch (err) {
+        console.log(error)
+        res.status(400).json({
+            message: err.message
+        })
+    }
+};
+
+exports.createDriver = async (req, res, next) => {
+    const { name, email, phone, password } = req.body;
+
+    try {
+        let findDriver = await driver.findOne({ email, phone });
+
+        if (findDriver) {
+            return res.status(409).json({ data: {}, message: "Already exist.", status: 409 });
+        } else {
+            const otp = OTP.generateOTP();
+            const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with bcrypt
+            const Driver = await driver.create({ name, email, phone, password: hashedPassword, otp });
+
+            if (Driver) {
+                return res.status(201).json({ data: Driver, message: "Registration successfully", status: 200 });
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+    next();
+}
+
+exports.AddDeriverDetails = async (req, res) => {
+    try {
+        const data = {
+            name: req.body.Name,
+            password: bcrypt.hashSync(req.body.password, 8),
+            email: req.body.email,
+            image: req.body.image,
+        }
+        const Data = await driver.findOne({ email: req.body.email })
+        if (Data) {
+            return res.status(201).json({
+                message: "Email is Already regtration"
+            })
+        } else {
+            const data = await driver.findOneAndUpdate({ _id: req.params.id }, {
+                name: req.body.name,
+                password: bcrypt.hashSync(req.body.password, 8),
+                email: req.body.email,
+                image: req.body.image,
+            }, { new: true });
+            res.status(200).json({
+                success: true,
+                details: data
+            })
+        }
+    } catch (err) {
         res.status(400).json({
             message: err.message
         })
@@ -126,41 +152,41 @@ const data = {
 //     }
 // }
 
-exports.AssignOrdertoDriver = async(req,res) => {
-    try{
-    const orderData = await order.findById({_id: req.body.orderId});
-    const productId = orderData.products[0].product;
-    console.log(productId)
-    const productData = await product.findOne({_id: productId});
-    console.log(productData)
-    const UserData = await address.find({user: orderData.user})
-    const userData = await User.findById({_id: orderData.user})
-    console.log(productData.images)
-    if(!orderData){
-        return res.status(500).json({
-            message: "Order not found "
-        })
-    }else{
-        const data = {
-            orderId: req.body.orderId, 
-            driverId: req.body.driverId,
-            image: productData.images[0], 
-            order: orderData, 
-            price: req.body.price,
-            returnitem: req.body.returnitem,
-            pickuporder: req.body.dilverdAddress,
-            payment: req.body.payment, 
-            useraddress: UserData,
-            username: userData.name,
-            userMobile: userData.phone
+exports.AssignOrdertoDriver = async (req, res) => {
+    try {
+        const orderData = await order.findById({ _id: req.body.orderId });
+        const productId = orderData.products[0].product;
+        console.log(productId)
+        const productData = await product.findOne({ _id: productId });
+        console.log(productData)
+        const UserData = await address.find({ user: orderData.user })
+        const userData = await User.findById({ _id: orderData.user })
+        console.log(productData.images)
+        if (!orderData) {
+            return res.status(500).json({
+                message: "Order not found "
+            })
+        } else {
+            const data = {
+                orderId: req.body.orderId,
+                driverId: req.body.driverId,
+                image: productData.images[0],
+                order: orderData,
+                price: req.body.price,
+                returnitem: req.body.returnitem,
+                pickuporder: req.body.dilverdAddress,
+                payment: req.body.payment,
+                useraddress: UserData,
+                username: userData.name,
+                userMobile: userData.phone
+            }
+            const DOrder = await DriverOrder.create(data);
+            res.status(200).json({
+                sucess: true,
+                message: DOrder
+            })
         }
-        const DOrder = await DriverOrder.create(data);
-        res.status(200).json({
-            sucess: true,
-            message: DOrder
-        })
-    }
-    }catch(err){
+    } catch (err) {
         console.log(err)
         res.status(400).json({
             message: err.message
@@ -169,15 +195,15 @@ exports.AssignOrdertoDriver = async(req,res) => {
 }
 
 
-exports.DriverAccept  = async(req,res) => {
-    try{
-    const data = await DriverOrder.findOneAndUpdate({_id: req.params.id}, {
-        status: "Accept"
-    }, {new: true},)
-    res.status(200).json({
-        message: "Accepted"
-    })
-    }catch(err){
+exports.DriverAccept = async (req, res) => {
+    try {
+        const data = await DriverOrder.findOneAndUpdate({ _id: req.params.id }, {
+            status: "Accept"
+        }, { new: true },)
+        res.status(200).json({
+            message: "Accepted"
+        })
+    } catch (err) {
         res.status(400).json({
             message: err.message
         })
@@ -185,25 +211,25 @@ exports.DriverAccept  = async(req,res) => {
 }
 
 
-exports.DriverReject  = async(req,res) => {
-    try{
-        const Data = await DriverOrder.findById({_id: req.params.id})
-        if(!Data){
-            return res.status(500).json({message: "Driver_Order ID is not found "})
+exports.DriverReject = async (req, res) => {
+    try {
+        const Data = await DriverOrder.findById({ _id: req.params.id })
+        if (!Data) {
+            return res.status(500).json({ message: "Driver_Order ID is not found " })
         }
-    const data = await DriverOrder.findOneAndUpdate({_id: req.params.id}, {
-        status: "Reject"
-    }, {new: true},)
-   
-   const RData = await rejectOrder.create({
-    driverId: Data.driverId, 
-    reasons: req.body.reason
+        const data = await DriverOrder.findOneAndUpdate({ _id: req.params.id }, {
+            status: "Reject"
+        }, { new: true },)
 
-   })
-    res.status(200).json({
-        message: "Reject"
-    })
-    }catch(err){
+        const RData = await rejectOrder.create({
+            driverId: Data.driverId,
+            reasons: req.body.reason
+
+        })
+        res.status(200).json({
+            message: "Reject"
+        })
+    } catch (err) {
         res.status(400).json({
             message: err.message
         })
@@ -211,19 +237,39 @@ exports.DriverReject  = async(req,res) => {
 }
 
 
-exports.DriverAllOrder = async(req,res) => {
-    try{
-const Data = await DriverOrder.find({driverId: req.params.id});
-if(Data.length ==0 ){
-    return res.status(201).json({
-        message: "No Data Found "
-    })
+exports.DriverAllOrder = async (req, res) => {
+    try {
+        const Data = await DriverOrder.find();
+        if (Data.length == 0) {
+            return res.status(201).json({
+                message: "No Data Found "
+            })
+        }
+        res.status(200).json({
+            sucess: true,
+            message: Data
+        })
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
+        })
+    }
 }
-res.status(200).json({
-    sucess: true,
-    message: Data
-})
-    }catch(err){
+
+exports.DriverSingleOrder = async (req, res) => {
+    const Id = req.params.id
+    try {
+        const Data = await DriverOrder.findById(Id);
+        if (Data.length == 0) {
+            return res.status(201).json({
+                message: "No Data Found "
+            })
+        }
+        res.status(200).json({
+            sucess: true,
+            message: Data
+        })
+    } catch (err) {
         res.status(400).json({
             message: err.message
         })
@@ -231,41 +277,41 @@ res.status(200).json({
 }
 
 
-exports.DeleteAssignOrder = async(req,res) => {
-    try{
-    await DriverOrder.findByIdAndDelete({_id: req.params.id});
-    res.status(200).json({
-        message: "Assign Order Deleted "
-    })
-    }catch(err){
+exports.DeleteAssignOrder = async (req, res) => {
+    try {
+        await DriverOrder.findByIdAndDelete({ _id: req.params.id });
+        res.status(200).json({
+            message: "Assign Order Deleted "
+        })
+    } catch (err) {
         res.status(400).json({
             message: err.message
         })
     }
 }
 
-exports.GetPriceByDriverId = async(req, res) => {
-    try{
-    const data = await DriverOrder.find({driverId: req.params.driverId});
-    console.log(data)
-    const Data = data.map(d => {
-       return  result = {
-            price: d.price, 
-            orderId: d._id, 
-            products: d.order.products
-       }
-    })
-    let total =0 ; 
-    for(let i=0 ; i< Data.length; i++){
-        (total) += parseInt(Data[i].price)
-    
-    }
-    console.log(total)
-    res.status(200).json({
-        message: Data,
-        total: total
-    })
-    }catch(err){
+exports.GetPriceByDriverId = async (req, res) => {
+    try {
+        const data = await DriverOrder.find({ driverId: req.params.driverId });
+        console.log(data)
+        const Data = data.map(d => {
+            return result = {
+                price: d.price,
+                orderId: d._id,
+                products: d.order.products
+            }
+        })
+        let total = 0;
+        for (let i = 0; i < Data.length; i++) {
+            (total) += parseInt(Data[i].price)
+
+        }
+        console.log(total)
+        res.status(200).json({
+            message: Data,
+            total: total
+        })
+    } catch (err) {
         console.log(err);
         res.status(400).json({
             message: err.message
@@ -273,16 +319,16 @@ exports.GetPriceByDriverId = async(req, res) => {
     }
 }
 
-exports.DeliveredOrder = async(req,res) => {
-    try{
-    await DriverOrder.updateOne({_id: req.params.id}, {
-        delivered: true,
-        orderStatus: "Deliverd"
-    }, {new: true})
-    res.status(200).json({
-        message: "Delivered "
-    })
-    }catch(err){
+exports.DeliveredOrder = async (req, res) => {
+    try {
+        await DriverOrder.updateOne({ _id: req.params.id }, {
+            delivered: true,
+            orderStatus: "Deliverd"
+        }, { new: true })
+        res.status(200).json({
+            message: "Delivered "
+        })
+    } catch (err) {
         console.log(err)
         res.status(400).json({
             message: err.message
@@ -292,68 +338,73 @@ exports.DeliveredOrder = async(req,res) => {
 
 exports.logout = async (req, res, next) => {
     res.cookie("token", null, {
-      expires: new Date(Date.now()),
-      httpOnly: true,
+        expires: new Date(Date.now()),
+        httpOnly: true,
     });
-  
-    res.status(200).json({
-      success: true,
-      message: "Logged Out",
-    });
-  };
 
-exports.AllDrivers = async(req,res) => {
-    try{
-    const Data = await driver.find() 
-    if(Data.length ==0 ){
-        return res.status(201).json({
-            message: "No Data Found "
-        })
-    }else{
-        return res.status(200).json({
-            message: Data
-        })
-    }
-    }catch(err){
+    res.status(200).json({
+        success: true,
+        message: "Logged Out",
+    });
+};
+
+exports.AllDrivers = async (req, res) => {
+    try {
+        const Data = await driver.find()
+        if (Data.length == 0) {
+            return res.status(201).json({
+                message: "No Data Found "
+            })
+        } else {
+            return res.status(200).json({
+                message: Data
+            })
+        }
+    } catch (err) {
         res.status(400).json({
             message: err.message
         })
     }
 }
 
-exports.driverCompleted = async(req,res) => {
-    try{
-    const data = await DriverOrder.find({driverId: req.params.driverId, orderStatus: "Deliverd"});
-    
-    if(data.length ==0 ){
-        return res.status(201).json({
-            message: "No Delivered Order "
+exports.driverCompleted = async (req, res) => {
+    try {
+        const data = await DriverOrder.find({ driverId: req.params.driverId, orderStatus: "Deliverd" });
+
+        if (data.length == 0) {
+            return res.status(201).json({
+                message: "No Delivered Order "
+            })
+        } else {
+            return res.status(200).json({
+                message: data
+            })
+        }
+    } catch (err) {
+        res.status(400).json({
+            message: err.message
         })
-    }else{
-        return res.status(200).json({
+    }
+}
+
+exports.PendingOrder = async (req, res) => {
+    try {
+        const data = await DriverOrder.find({
+            $and: [
+                { driverId: req.params.id },
+                { status: "pending" }
+            ]
+        });
+        if (!data || data.length == 0) {
+            {
+                return res.status(404).json({ message: "Pending Order not found" })
+            }
+        }
+
+        res.status(200).json({
             message: data
         })
-    }
-    }catch(err){
-        res.status(400).json({
-            message: err.message
-        })
-    }
-}
-
-exports.PendingOrder = async(req,res) => {
-    try{
-    const data = await DriverOrder.find({
-        $and: [
-           {driverId: req.params.id}, 
-            {status: "pending"}
-        ]
-    });
-    console.log(data)
-    res.status(200).json({
-        message: data
-    })
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.status(400).json({
             message: err.message
@@ -362,19 +413,19 @@ exports.PendingOrder = async(req,res) => {
 }
 
 
-exports.AcceptOrder = async(req,res) => {
-    try{
-    const data = await DriverOrder.find({
-        $and: [
-           {driverId: req.params.id}, 
-            {status: "Accept"}
-        ]
-    });
-    console.log(data)
-    res.status(200).json({
-        message: data
-    })
-    }catch(err){
+exports.AcceptOrder = async (req, res) => {
+    try {
+        const data = await DriverOrder.find({
+            $and: [
+                { driverId: req.params.id },
+                { status: "Accept" }
+            ]
+        });
+        console.log(data)
+        res.status(200).json({
+            message: data
+        })
+    } catch (err) {
         console.log(err);
         res.status(400).json({
             message: err.message
@@ -383,31 +434,30 @@ exports.AcceptOrder = async(req,res) => {
 }
 
 
-exports.ChangeStatus = async(req,res) => {
-    try{
-    const driverData = await driver.findById({_id: req.params.id})
-    driverData.status = req.body.status
-    driverData.save();
-    res.status(200).json({
-        message: "ok",
-        result : driverData
-    })
-    }catch(err){
-        console.log(err);
-        res.status(400).json({
+exports.ChangeStatus = async (req, res) => {
+    try {
+        const driverData = await DriverOrder.findOne({ driverId: req.params.id })
+        driverData.status = req.body.status
+        driverData.save();
+        res.status(200).json({
             message: "ok",
+            result: driverData
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({
             error: err.message
         })
     }
 }
 
-exports.DeleteDriver = async(req, res) => {
-    try{
-    await driver.findByIdAndDelete({_id: req.params.id});
-    res.status(200).json({
-        message: "Driver Deleted ",
-    })
-    }catch(err){
+exports.DeleteDriver = async (req, res) => {
+    try {
+        await driver.findByIdAndDelete({ _id: req.params.id });
+        res.status(200).json({
+            message: "Driver Deleted ",
+        })
+    } catch (err) {
         console.log(err);
         res.status(400).json({
             message: "ok",

@@ -21,14 +21,14 @@ const router = express.Router();
 
 router.get("/",getAllProducts);
 
-router.get("/by/category/:id", getProductByCategory);
+router.get("/by/category/:id",authorizeRoles("admin"), getProductByCategory);
 router.post("/add/wishlist/:id", isAuthenticatedUser, createWishlist);
 router.put("/remove/wishlist/:id",isAuthenticatedUser, removeFromWishlist);
 router.get("/wishlist/me",isAuthenticatedUser, myWishlist);
 
 router.get("/admin/products", getAdminProducts);
 
-router.post("/admin/product/new",upload.array("image"),createProduct);
+router.post("/admin/product/new",upload.array("image"), authorizeRoles("admin"), createProduct);
 
 router.put("/admin/product/:id",isAuthenticatedUser, updateProduct)
 router.delete("/admin/product/:id",isAuthenticatedUser, deleteProduct);

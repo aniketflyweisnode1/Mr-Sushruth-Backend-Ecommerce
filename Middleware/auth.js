@@ -1,9 +1,9 @@
 const ErrorHander = require("../utils/errorhander");
-// const catchAsyncErrors = require("./catchAsyncErrors");
+const catchAsyncErrors = require("./catchAsyncErrors");
 const jwt = require("jsonwebtoken");
 const User = require("../Model/userModel");
 
-exports.isAuthenticatedUser = /* catchAsyncErrors( */async (req, res, next) => {
+exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   try {
     const token = req.get("Authorization")?.split("Bearer ")[1];
     console.log(token)
@@ -20,11 +20,11 @@ exports.isAuthenticatedUser = /* catchAsyncErrors( */async (req, res, next) => {
     res.status(500).json({ message: error.message })
   }
 
-}/* ) */;
+});
 
-exports.authorizeRoles = (...role) => {
+exports.authorizeRoles = (...roles) => {
   return (req, res, next) => {
-    if (!role.includes(req.user.role)) {
+    if (!roles.includes(req.user.role)) {
       return next(
         new ErrorHander(
           `Role: ${req.user.role} is not allowed to access this resouce `,
