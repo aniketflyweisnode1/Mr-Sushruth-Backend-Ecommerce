@@ -1,0 +1,1219 @@
+{
+	"info": {
+		"_postman_id": "ff1fb35a-2eca-418b-8c19-9f24a1ae2a19",
+		"name": "Shusruth Ecommerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "23385795",
+		"_collection_link": "https://solar-trinity-26355.postman.co/workspace/flyweis~160f0fa9-ce3b-44b5-9e35-ff590823618d/collection/23385795-ff1fb35a-2eca-418b-8c19-9f24a1ae2a19?action=share&creator=23385795&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Register Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"admin\",\r\n    \"email\": \"admin@gmail.com\",\r\n    \"gender\": \"male\",\r\n    \"phone\": 1234567801,\r\n    \"password\": \"admin@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/admin/registerAdmin"
+					},
+					"response": []
+				},
+				{
+					"name": "Login user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"admin@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/admin/signin"
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL USER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/admin/user"
+					},
+					"response": []
+				},
+				{
+					"name": "GET USER BY ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://localhost:9435/api/v1/admin/649eae5b79f3b0597387be2a"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/admin/649413695e8d9b71fcbc4868"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\":\"798327089\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/user/create"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Email",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"brad joe\",\r\n    \"email\":\"bradjoe@123gmail.com\",\r\n    \"gender\":\"male\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/user/email/64b51f8863c16714e3cb52fb"
+					},
+					"response": []
+				},
+				{
+					"name": "Update mobile number",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\":\"0987654321\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/user/mobile/6494386a3ab36fd6763ec745"
+					},
+					"response": []
+				},
+				{
+					"name": "Login user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\":\"1234567801\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify _OTP",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTk4NTI2MjcxN2QyMDc0ODIzYzAxZSIsImlhdCI6MTY4Nzg0NTM2MiwiZXhwIjoxNjg3OTMxNzYyfQ.bcqx2LHdtAGm07tbYExFlIFzbXy2m4-NtXB9zJUq1Jk"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"otp\": \"5126\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/user/verify-otp/649eae5b79f3b0597387be2a"
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL USER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/user"
+					},
+					"response": []
+				},
+				{
+					"name": "GET USER BY ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "http://localhost:9435/api/v1/user/6494386a3ab36fd6763ec745"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/user/649413695e8d9b71fcbc4868"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "create Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Green Cabbage\",\r\n    \"image\":\"https://cdn.pixabay.com/photo/2017/11/06/17/05/vegetable-2924245_640.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/catg/create"
+					},
+					"response": []
+				},
+				{
+					"name": "update category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Blue shirt\",\r\n    \"image\":\"https://cdn.pixabay.com/photo/2020/04/04/14/16/flea-market-5002452_1280.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/catg/update/64957e2dd228df1854c4d69e"
+					},
+					"response": []
+				},
+				{
+					"name": "get category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/catg/64957e2dd228df1854c4d69e"
+					},
+					"response": []
+				},
+				{
+					"name": "get all category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/catg"
+					},
+					"response": []
+				},
+				{
+					"name": "delete category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:9435/api/v1/catg/D/64957e2dd228df1854c4d69e"
+					},
+					"response": []
+				},
+				{
+					"name": "REMOVE CATEGORY",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:9435/api/v1/catg/delete/64957e2dd228df1854c4d69e"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Sub-Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"parentCategory\": \"64957e2dd228df1854c4d69e\",\r\n    \"subCategory\": \"Carrot\",\r\n    \"image\": {\r\n        \"public_id\": \"https://cdn.pixabay.com/photo/2017/06/09/16/39/carrots-2387394_640.jpg\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/catg/subcategory"
+					},
+					"response": []
+				},
+				{
+					"name": "Total Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/catg/totalcategory"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Create Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjUxYWE4Yzk5ZGMwZDNjNDIyNTFhZiIsImlhdCI6MTY4OTU5MjQ2MiwiZXhwIjoxNjg5Njc4ODYyfQ.8RtLXy3uS2QD8Ki4n5KjeQgwaLPtcUmCrgmXoz-n2ho"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Potato",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "sgdkgsadkasgf",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "899",
+									"type": "text"
+								},
+								{
+									"key": "size",
+									"value": "500g",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "649d289ebd769bffe69fa9d0",
+									"type": "text"
+								},
+								{
+									"key": "Stock",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "QZhNFlgo6/download (2).jpg"
+								},
+								{
+									"key": "subCategory",
+									"value": "649d2e6c1e6b53b43522380d",
+									"type": "text"
+								}
+							]
+						},
+						"url": "localhost:9435/api/v1/product/admin/product/new"
+					},
+					"response": []
+				},
+				{
+					"name": "Get ALL PRODUCT",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9435/api/v1/product?search=RED",
+							"host": [
+								"localhost"
+							],
+							"port": "9435",
+							"path": [
+								"api",
+								"v1",
+								"product"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "RED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product By Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/product/by/category/64957e2dd228df1854c4d69e"
+					},
+					"response": []
+				},
+				{
+					"name": "GET PRODUCT BY ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/product/6495940dce367d71c08a5651"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product Review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTk4NTI2MjcxN2QyMDc0ODIzYzAxZSIsImlhdCI6MTY4Nzc4MzMyNiwiZXhwIjoxNjg3ODY5NzI2fQ.H085A3Bf2aBq-FPVTiLvWhdmAHKp972WcePsbkkxS7Q"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"649c096b2a8f79163e6f29e4\",\r\n    \"name\":\"Aline\",\r\n    \"rating\":\"3.4\",\r\n    \"comment\":\"Bad One 11!\",\r\n    \"productId\":\"649d34fbcc1e681b1f07baf4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/product/review"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Add to Cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWE4NmJhMWFkNzVkZWI1YmQ1YTRmYSIsImlhdCI6MTY4Nzg1ODcxMSwiZXhwIjoxNjg3OTQ1MTExfQ.UaWjVlUwg6pm-NyN240ZMSyAiU9a-t1oka0WecZcAUg"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"649c096b2a8f79163e6f29e4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/cart/649d34fbcc1e681b1f07baf4"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cart",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"quantity\":\"5\",\r\n    \"user\":\"6494386a3ab36fd6763ec745\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/cart/6495940dce367d71c08a5651"
+					},
+					"response": []
+				},
+				{
+					"name": "GET CART",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/cart/64995a4aaf92bd17a0394b73"
+					},
+					"response": []
+				},
+				{
+					"name": "Apply Coupon",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"couponCode\": \"JUNE24\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/cart/coupon"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Shopping Cart",
+			"item": [
+				{
+					"name": "Checkout Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \r\n    \"userId\":\"649c096b2a8f79163e6f29e4\",\r\n    \"street1\": \"line 1 of address\",\r\n    \"street2\": \"line 2 of address\",\r\n    \"city\": \"some city\",\r\n    \"state\": \"some state\",\r\n    \"country\": \"some country\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/order/checkout"
+					},
+					"response": []
+				},
+				{
+					"name": "Place Order",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"649c096b2a8f79163e6f29e4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/order/place-order/cod"
+					},
+					"response": []
+				},
+				{
+					"name": "Place Order COD",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWMwOTZiMmE4Zjc5MTYzZTZmMjllNCIsImlhdCI6MTY4Nzk1NjQ1NCwiZXhwIjoxNjg4MDQyODU0fQ.4C8ibXe7ioIVKWfJWy7yrhX1mNRuSsx88NuGZv9lOvI"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"649aae9695ad4a023f9c2b3d\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/order/place-order/cod"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Order by Admin",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/order/admin/orders"
+					},
+					"response": []
+				},
+				{
+					"name": "MY order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWE4NmJhMWFkNzVkZWI1YmQ1YTRmYSIsImlhdCI6MTY4Nzg0ODc2NiwiZXhwIjoxNjg3OTM1MTY2fQ.Sh5_9C4jKQo-B8qfsQpnzM1-Sby3hTweQ0SHFGdzJJ8"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/order/me"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWE4NmJhMWFkNzVkZWI1YmQ1YTRmYSIsImlhdCI6MTY4Nzg0ODc2NiwiZXhwIjoxNjg3OTM1MTY2fQ.Sh5_9C4jKQo-B8qfsQpnzM1-Sby3hTweQ0SHFGdzJJ8"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/order/orders/me"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/order/649aaee295ad4a023f9c2b4a"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/order/admin/orders"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Return Oder By userId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/order/return/63b6b7dd350a96c1cc823e4b"
+					},
+					"response": []
+				},
+				{
+					"name": "ADD Order Return",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "localhost:9435/api/v1/order/return/649aaee295ad4a023f9c2b4a"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"paymentStatus\":\"paid\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/order/admin/649aaee295ad4a023f9c2b4a"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Help",
+			"item": [
+				{
+					"name": "ADD Help",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWFhZTk2OTVhZDRhMDIzZjljMmIzZCIsImlhdCI6MTY4Nzg2MDM0MywiZXhwIjoxNjg3OTQ2NzQzfQ.6NWrhIY8pccY7Oy8J-ibqOUg_8IiC3EHYO8jGS66edA"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"649aae9695ad4a023f9c2b3d\",\r\n    \"name\": \"demo1\",\r\n    \"mobile\": \"1234567891\",\r\n    \"query\": \"Exchange\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/help"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Help",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWFhZTk2OTVhZDRhMDIzZjljMmIzZCIsImlhdCI6MTY4Nzg2MDM0MywiZXhwIjoxNjg3OTQ2NzQzfQ.6NWrhIY8pccY7Oy8J-ibqOUg_8IiC3EHYO8jGS66edA"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/help/user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Help by User Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/help/user"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Help",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:9435/api/v1/help/delete/649acbaeaa2d3506c013f073"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Banner",
+			"item": [
+				{
+					"name": "Create Banner",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/FLYWEIS/Downloads/Select slot.png"
+								},
+								{
+									"key": "name",
+									"value": "joe",
+									"type": "text"
+								}
+							]
+						},
+						"url": "localhost:9435/api/v1/banner/add"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Banner",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/banner/get/649acec9e3c707d83d3dc43b"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Banner",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:9435/api/v1/banner/delete/649acec9e3c707d83d3dc43b"
+					},
+					"response": []
+				},
+				{
+					"name": "get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/banner/all"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Term",
+			"item": [
+				{
+					"name": "Add Term",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"terms\": \"Message Add Terms\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/term/add"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All term",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/term"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Term",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:9435/api/v1/term/649ad03a84b803d081f81f50"
+					},
+					"response": []
+				},
+				{
+					"name": "Update term",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"terms\": \"Message Add Terms update\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/term/649ad03a84b803d081f81f50"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Privacy",
+			"item": [
+				{
+					"name": "Add Privacy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"privacy\": \"Add First privacy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/privacy&policy/add"
+					},
+					"response": []
+				},
+				{
+					"name": "get privacy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/privacy&policy"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete privacy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:9435/api/v1/privacy&policy/649ad21957ecb807b8e53a64"
+					},
+					"response": []
+				},
+				{
+					"name": "UPdate privacy",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "localhost:9435/api/v1/privacy&policy/649ad21957ecb807b8e53a64"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "My Wallet",
+			"item": [
+				{
+					"name": "ADD Money",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"balance\":300\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/wallet/addmoney/649c07920b57053ea8dfc506"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Wallet",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/wallet/649c07920b57053ea8dfc506"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE WALLET",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:9435/api/v1/wallet/649bf13747c82fdb735d3345"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order Schedule",
+			"item": [
+				{
+					"name": "Create order schedule",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\":\"2023-06-30\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/schedule/order/649c096b2a8f79163e6f29e4"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Schedule",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9435/api/v1/schedule/order/649c1b6f74e9b11c0544804f"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sub_category",
+			"item": [
+				{
+					"name": "Create Sub-category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"parentCategory\":\"649d289ebd769bffe69fa9d0\",\r\n    \"subCategory\":\"Potato\",\r\n    \"image\":{\r\n        \"public_id\":\"Potatos\",\r\n        \"url\":\"https://cdn.pixabay.com/photo/2016/08/11/08/43/potatoes-1585060_640.jpg\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:9435/api/v1/catg/subcategory"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Driver",
+			"item": [
+				{
+					"name": "create driver",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"driversakshay\",\r\n    \"email\":\"driverakshay@gmail.com\",\r\n    \"phone\":\"1111155567\",\r\n    \"password\":\"driverpassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/driver/create"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Driver",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"driverharsh\",\r\n    \"email\":\"driverharsh@gmail.com\",\r\n    \"phone\":\"1111111111\",\r\n    \"password\":\"driverpassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/driver/update/649eb940622f2ba9f8796248"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Driver OTP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"otp\":\"1718\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/driver/verify"
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Order Driver",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderId\": \"649d609a7a6083e16d433b88\",\r\n  \"driverId\": \"649eb0b02bde95235298b1d3\",\r\n  \"price\": 50,\r\n  \"returnitem\": false,\r\n  \"dilverdAddress\": \"xyz, berline\",\r\n  \"payment\": \"UPI\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/driver/addOrder"
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/accept/649ebd20e91fa69db71056ba"
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/reject/649ebd20e91fa69db71056ba"
+					},
+					"response": []
+				},
+				{
+					"name": "Driver Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/allorders"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Driver Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/allorders/649ebd20e91fa69db71056ba"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Price by Driver id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/price/649eb0b02bde95235298b1d3"
+					},
+					"response": []
+				},
+				{
+					"name": "Delivered Order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/complete/649ebd20e91fa69db71056ba"
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL Driver",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/alldriver"
+					},
+					"response": []
+				},
+				{
+					"name": "Driver Order Completed",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/delivered/649eb940622f2ba9f8796248"
+					},
+					"response": []
+				},
+				{
+					"name": "PENDING ORDER",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/pending/order/649ebd20e91fa69db71056ba"
+					},
+					"response": []
+				},
+				{
+					"name": "Chnage Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\":\"pending\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9435/api/v1/driver/status/649ebd20e91fa69db71056ba"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Driver",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:9435/api/v1/driver/649eb940622f2ba9f8796248"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

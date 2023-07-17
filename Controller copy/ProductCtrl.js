@@ -4,29 +4,47 @@ const catchAsyncErrors = require("../Middleware/catchAsyncErrors");
 const Wishlist = require("../Model/WishlistModel");
 const mongoose = require("mongoose");
 const ErrorHander = require("../utils/errorhander");
+const ApiFeatures = require("../utils/apifeatures");
+
+
 cloudinary.config({
   cloud_name: "dvwecihog",
   api_key: '364881266278834',
   api_secret: '5_okbyciVx-7qFz7oP31uOpuv7Q'
-});
+}); 
 
 
 // Create Product -- Admin
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   let images = [];
-  for (var i = 0; i < req.files.length; i++) {
-    images.push({ img: req.files[i].path })
+  let leaselistingPicture = []
+  if (req.files.length > 0) {
+    leaselistingPicture = req.files.map((file) => {
+      return { path: file.path, filename: file.filename  };
+    });
   }
-  const data = {
+
+  const uploadPromises = leaselistingPicture.map(async (image) => {
+    const result = await cloudinary.uploader.upload(image.path, {public_id: image.filename});
+    return result
+  });
+ const Images =  await Promise.all(uploadPromises);
+ for(var i=0 ; i<Images.length; i++){
+  images.push({img: Images[i].url})
+ }
+  const  data = {
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
+    ratings: req.body.ratings,
     images,
     size: req.body.size,
     colors: req.body.colors,
     category: req.body.category,
-    subCategory: req.body.subCategory,
-    Stock: req.body.Stock,
+    Stock: req.body.Stock, 
+    numOfReviews: req.body.numOfReviews,
+    user: req.body.user,
+    reviews: req.body.review
   }
   const product = await Product.create(data);
 
@@ -36,43 +54,55 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// Get All Product
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
-  const productsCount = await Product.count();
-  let apiFeature = await Product.aggregate([
+  const resultPerPage = 50;
+  const productsCount = await Product.countDocuments();
+  let demoProduct = await Product.aggregate([
     {
-      $lookup: { from: "categories", localField: "category", foreignField: "_id", as: "category" },
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "category",
+      },
     },
-    { $unwind: "$category" },
     {
-      $lookup: { from: "subcategories", localField: "subCategory", foreignField: "_id", as: "subCategory", },
+      $unwind: "$category",
     },
-    { $unwind: "$subCategory" },
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        price: 1,
+        ratings: 1,
+        review: 1,
+        category: "$category.parentCategory",
+      },
+    },
   ]);
-  if (req.query.search != (null || undefined)) {
-    let data1 = [
-      {
-        $lookup: { from: "categories", localField: "category", foreignField: "_id", as: "category" },
-      },
-      { $unwind: "$category" },
-      {
-        $lookup: { from: "subcategories", localField: "subCategory", foreignField: "_id", as: "subCategory", },
-      },
-      { $unwind: "$subCategory" },
-      {
-        $match: {
-          $or: [
-            { "category.name": { $regex: req.query.search, $options: "i" }, },
-            { "subCategory.subCategory": { $regex: req.query.search, $options: "i" }, },
-            { "name": { $regex: req.query.search, $options: "i" }, },
-            { "description": { $regex: req.query.search, $options: "i" }, },
-            { "colors": { $regex: req.query.search, $options: "i" }, }
-          ]
-        }
-      }
-    ]
-    apiFeature = await Product.aggregate(data1);
-  }
-  res.status(200).json({ success: true, productsCount, apiFeature, });
+
+  const apiFeature = new ApiFeatures(
+    Product.find().populate("category"),
+    req.query
+  )
+    .search()
+    .filter();
+
+  let products = await apiFeature.query;
+
+  let filteredProductsCount = products.length;
+
+  apiFeature.pagination(resultPerPage);
+
+  res.status(200).json({
+    success: true,
+    products,
+    demoProduct,
+    productsCount,
+    resultPerPage,
+    filteredProductsCount,
+  });
 });
 
 // Get All Product (Admin)
@@ -102,71 +132,71 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
 // Update Product -- Admin
 
 exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
-  try {
-    let product = await Product.findById(req.params.id);
+  try{
+  let product = await Product.findById(req.params.id);
 
-    if (!product) {
-      return next(new ErrorHander("Product not found", 404));
-    }
-
-    // Images Start Here
-    console.log(req.body.images)
-    let images = [];
-
-    if (req.body.images) {
-      images.push(req.body.images);
-    } else {
-      images = req.body.images;
-    }
-
-    // if (images !== undefined) {
-    //   // Deleting Images From Cloudinary
-    //   for (let i = 0; i < product.images.length; i++) {
-    //     await cloudinary.v2.uploader.destroy(product.images[i].public_id);
-    //   }
-
-    //   const imagesLinks = [];
-
-    //   for (let i = 0; i < images.length; i++) {
-    //     const result = await cloudinary.v2.uploader.upload(images[i], {
-    //       folder: "products",
-    //     });
-
-    //     imagesLinks.push({
-    //       public_id: result.public_id,
-    //       url: result.secure_url,
-    //     });
-    //   }
-
-    //   req.body.images = imagesLinks;
-    // }
-
-    product = await Product.findByIdAndUpdate(req.params.id, {
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      category: req.body.category
-    }, {
-      new: true,
-      runValidators: true,
-      useFindAndModify: false,
-    });
-
-    res.status(200).json({
-      success: true,
-      product,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({
-      message: err.message
-    })
+  if (!product) {
+    return next(new ErrorHander("Product not found", 404));
   }
+
+  // Images Start Here
+  console.log(req.body.images)
+  let images = [];
+
+  if (req.body.images) {
+    images.push(req.body.images);
+  } else {
+    images = req.body.images;
+  }
+
+  // if (images !== undefined) {
+  //   // Deleting Images From Cloudinary
+  //   for (let i = 0; i < product.images.length; i++) {
+  //     await cloudinary.v2.uploader.destroy(product.images[i].public_id);
+  //   }
+
+  //   const imagesLinks = [];
+
+  //   for (let i = 0; i < images.length; i++) {
+  //     const result = await cloudinary.v2.uploader.upload(images[i], {
+  //       folder: "products",
+  //     });
+
+  //     imagesLinks.push({
+  //       public_id: result.public_id,
+  //       url: result.secure_url,
+  //     });
+  //   }
+
+  //   req.body.images = imagesLinks;
+  // }
+
+  product = await Product.findByIdAndUpdate(req.params.id, {
+    name: req.body.name,
+    description: req.body.description,
+    price: req.body.price,
+    category: req.body.category
+  }, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
+  res.status(200).json({
+    success: true,
+    product,
+  });
+}catch(err){
+  console.log(err);
+  res.status(400).json({
+    message: err.message
+  })
+}
 });
 // Delete Product
 
 exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById({ _id: req.params.id });
+  const product = await Product.findById({_id: req.params.id});
 
   if (!product) {
     return next(new ErrorHander("Product not found", 404));
@@ -186,50 +216,50 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
   try {
     const { rating, comment, productId } = req.body;
 
-    const review = {
-      user: req.user._id,
-      name: req.user.name,
-      rating: Number(rating),
-      comment,
-    };
+  const review = {
+    user: req.user._id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  };
 
-    const product = await Product.findById(productId);
+  const product = await Product.findById(productId);
 
-    const isReviewed = product.reviews.find(
-      (rev) => rev.user.toString() === req.user._id.toString()
-    );
+  const isReviewed = product.reviews.find(
+    (rev) => rev.user.toString() === req.user._id.toString()
+  );
 
-    if (isReviewed) {
-      product.reviews.forEach((rev) => {
-        if (rev.user.toString() === req.user._id.toString())
-          (rev.rating = rating), (rev.comment = comment);
-      });
-    } else {
-      product.reviews.push(review);
-      product.numOfReviews = product.reviews.length;
-    }
-
-    let avg = 0;
-
+  if (isReviewed) {
     product.reviews.forEach((rev) => {
-      avg += rev.rating;
+      if (rev.user.toString() === req.user._id.toString())
+        (rev.rating = rating), (rev.comment = comment);
     });
-
-    product.ratings = avg / product.reviews.length;
-
-    await product.save({ validateBeforeSave: false });
-
-    res.status(200).json({
-      success: true,
-      message: 'Your review has been saved.',
-    });
-  } catch (error) {
-    res.status(200).json({
-      success: false,
-      message: `Something Went Wrong in ${error.message} `,
-    });
+  } else {
+    product.reviews.push(review);
+    product.numOfReviews = product.reviews.length;
   }
 
+  let avg = 0;
+
+  product.reviews.forEach((rev) => {
+    avg += rev.rating;
+  });
+
+  product.ratings = avg / product.reviews.length;
+
+  await product.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    message: 'Your review has been saved.',
+  });
+  } catch (error) {
+    res.status(200).json({
+    success: false,
+    message: `Something Went Wrong in ${error.message} `,
+  });
+  }
+  
 });
 
 // Get All Reviews of a product
@@ -295,7 +325,7 @@ exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
 
 
 exports.createWishlist = catchAsyncErrors(async (req, res, next) => {
-  const product = req.params.id;
+  const  product  = req.params.id;
   //console.log(user)
   let wishList = await Wishlist.findOne({ user: req.user._id });
   if (!wishList) {
@@ -315,7 +345,7 @@ exports.removeFromWishlist = catchAsyncErrors(async (req, res, next) => {
   if (!wishlist) {
     return next(new ErrorHander("Wishlist not found", 404));
   }
-  const product = req.params.id;
+  const product  = req.params.id;
 
   wishlist.products.pull(new mongoose.Types.ObjectId(product));
 
@@ -343,18 +373,18 @@ exports.myWishlist = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-exports.getProductByCategory = catchAsyncErrors(async (req, res, next) => {
-  try {
-    const producyBycategory = await Product.find({ category: req.params.id })
+exports.getProductByCategory =  catchAsyncErrors(async (req,res,next) => {
+  try{
+    const producyBycategory = await Product.find({category:req.params.id})
+      
+      res.status(200).json({
+        message:"get Successfully",
+        data:producyBycategory
+      })
 
-    res.status(200).json({
-      message: "get Successfully",
-      data: producyBycategory
-    })
-
-  } catch (error) {
+  }catch(error){
     res.status(500).json({
-      message: error.message
+      message:error.message
     })
   }
 })

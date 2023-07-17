@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate");
+const mongooseAggregatePaginate = require("mongoose-aggregate-paginate");
 
 const productSchema = mongoose.Schema({
   name: {
@@ -21,18 +23,22 @@ const productSchema = mongoose.Schema({
   },
   images: [
     { img: { type: String } }
-],
+  ],
   size: {
     type: String
 
   },
-  colors : {
+  colors: {
     type: String
   },
   category: {
     type: mongoose.Schema.ObjectId,
     ref: "Category",
     required: [true, "Please Enter Product Category"],
+  },
+  subCategory: {
+    type: mongoose.Schema.ObjectId,
+    ref: "SubCategory",
   },
   Stock: {
     type: Number,
@@ -75,5 +81,6 @@ const productSchema = mongoose.Schema({
     default: Date.now,
   },
 });
-
+productSchema.plugin(mongoosePaginate);
+productSchema.plugin(mongooseAggregatePaginate);
 module.exports = mongoose.model("Product", productSchema);

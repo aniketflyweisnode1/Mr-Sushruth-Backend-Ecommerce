@@ -40,6 +40,8 @@ exports.sendOtp = async (req, res) => {
         throw error;
     }
 }
+
+
 exports.accountVerificationOTP = async (req, res, next) => {
     try {
         const user = await driver.findOne({
@@ -66,6 +68,7 @@ exports.accountVerificationOTP = async (req, res, next) => {
         })
     }
 };
+
 exports.createDriver = async (req, res, next) => {
     const { name, email, phone, password } = req.body;
 
@@ -89,6 +92,7 @@ exports.createDriver = async (req, res, next) => {
 
     next();
 }
+
 exports.AddDeriverDetails = async (req, res) => {
     try {
         const data = {
@@ -120,6 +124,34 @@ exports.AddDeriverDetails = async (req, res) => {
         })
     }
 }
+
+// exports.AddDeriverDetails = async(req,res) => {
+//     try{
+// const data = {
+//     Name: req.body.Name, 
+//     password: bcrypt.hashSync(req.body.password, 8),
+//     email: req.body.email, 
+//     image: req.body.image, 
+// } 
+//  const Data = await driver.findOne({email: req.body.email})
+//  if(Data){
+//     return res.status(201).json({
+//         message: "Email is Already regtration"
+//     })
+//  }else{
+//     const data = await driver.create(data);
+//     res.status(200).json({
+//         success: true, 
+//         details : data
+//     })
+//  }
+// }catch(err){
+//         res.status(400).json({
+//             message: err.message
+//         })
+//     }
+// }
+
 exports.AssignOrdertoDriver = async (req, res) => {
     try {
         const orderData = await order.findById({ _id: req.body.orderId });
@@ -161,6 +193,8 @@ exports.AssignOrdertoDriver = async (req, res) => {
         })
     }
 }
+
+
 exports.DriverAccept = async (req, res) => {
     try {
         const data = await DriverOrder.findOneAndUpdate({ _id: req.params.id }, {
@@ -175,6 +209,8 @@ exports.DriverAccept = async (req, res) => {
         })
     }
 }
+
+
 exports.DriverReject = async (req, res) => {
     try {
         const Data = await DriverOrder.findById({ _id: req.params.id })
@@ -199,6 +235,8 @@ exports.DriverReject = async (req, res) => {
         })
     }
 }
+
+
 exports.DriverAllOrder = async (req, res) => {
     try {
         const Data = await DriverOrder.find();
@@ -217,6 +255,7 @@ exports.DriverAllOrder = async (req, res) => {
         })
     }
 }
+
 exports.DriverSingleOrder = async (req, res) => {
     const Id = req.params.id
     try {
@@ -236,6 +275,8 @@ exports.DriverSingleOrder = async (req, res) => {
         })
     }
 }
+
+
 exports.DeleteAssignOrder = async (req, res) => {
     try {
         await DriverOrder.findByIdAndDelete({ _id: req.params.id });
@@ -248,6 +289,7 @@ exports.DeleteAssignOrder = async (req, res) => {
         })
     }
 }
+
 exports.GetPriceByDriverId = async (req, res) => {
     try {
         const data = await DriverOrder.find({ driverId: req.params.driverId });
@@ -276,6 +318,7 @@ exports.GetPriceByDriverId = async (req, res) => {
         })
     }
 }
+
 exports.DeliveredOrder = async (req, res) => {
     try {
         await DriverOrder.updateOne({ _id: req.params.id }, {
@@ -292,6 +335,7 @@ exports.DeliveredOrder = async (req, res) => {
         })
     }
 }
+
 exports.logout = async (req, res, next) => {
     res.cookie("token", null, {
         expires: new Date(Date.now()),
@@ -303,6 +347,7 @@ exports.logout = async (req, res, next) => {
         message: "Logged Out",
     });
 };
+
 exports.AllDrivers = async (req, res) => {
     try {
         const Data = await driver.find()
@@ -321,6 +366,7 @@ exports.AllDrivers = async (req, res) => {
         })
     }
 }
+
 exports.driverCompleted = async (req, res) => {
     try {
         const data = await DriverOrder.find({ driverId: req.params.driverId, orderStatus: "Deliverd" });
@@ -340,6 +386,7 @@ exports.driverCompleted = async (req, res) => {
         })
     }
 }
+
 exports.PendingOrder = async (req, res) => {
     try {
         const data = await DriverOrder.find({
@@ -364,6 +411,8 @@ exports.PendingOrder = async (req, res) => {
         })
     }
 }
+
+
 exports.AcceptOrder = async (req, res) => {
     try {
         const data = await DriverOrder.find({
@@ -383,6 +432,8 @@ exports.AcceptOrder = async (req, res) => {
         })
     }
 }
+
+
 exports.ChangeStatus = async (req, res) => {
     try {
         const driverData = await DriverOrder.findOne({ driverId: req.params.id })
@@ -399,6 +450,7 @@ exports.ChangeStatus = async (req, res) => {
         })
     }
 }
+
 exports.DeleteDriver = async (req, res) => {
     try {
         await driver.findByIdAndDelete({ _id: req.params.id });
