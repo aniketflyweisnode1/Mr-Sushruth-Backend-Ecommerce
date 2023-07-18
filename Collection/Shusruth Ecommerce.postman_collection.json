@@ -155,7 +155,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"phone\":\"1234567801\"\r\n}",
+							"raw": "{\r\n    \"phone\":\"798327089\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -169,24 +169,18 @@
 				{
 					"name": "Verify _OTP",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTk4NTI2MjcxN2QyMDc0ODIzYzAxZSIsImlhdCI6MTY4Nzg0NTM2MiwiZXhwIjoxNjg3OTMxNzYyfQ.bcqx2LHdtAGm07tbYExFlIFzbXy2m4-NtXB9zJUq1Jk"
-							}
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"otp\": \"5126\"\r\n}",
+							"raw": "{\r\n    \"otp\": \"2971\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "http://localhost:9435/api/v1/user/verify-otp/649eae5b79f3b0597387be2a"
+						"url": "http://localhost:9435/api/v1/user/verify-otp/64b51f8863c16714e3cb52fb"
 					},
 					"response": []
 				},
@@ -481,14 +475,29 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWE4NmJhMWFkNzVkZWI1YmQ1YTRmYSIsImlhdCI6MTY4Nzg1ODcxMSwiZXhwIjoxNjg3OTQ1MTExfQ.UaWjVlUwg6pm-NyN240ZMSyAiU9a-t1oka0WecZcAUg"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjUxZjg4NjNjMTY3MTRlM2NiNTJmYiIsImlhdCI6MTY4OTY2MDcwNywiZXhwIjoxNjg5NzQ3MTA3fQ.54neqFXTX1gfjdVxsaQ7dslKvg2CsB9aak9_dv25wUY"
 							}
 						},
 						"method": "POST",
 						"header": [],
+						"url": "localhost:9435/api/v1/cart/649d34fbcc1e681b1f07baf4"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjUxZjg4NjNjMTY3MTRlM2NiNTJmYiIsImlhdCI6MTY4OTY2MDcwNywiZXhwIjoxNjg5NzQ3MTA3fQ.54neqFXTX1gfjdVxsaQ7dslKvg2CsB9aak9_dv25wUY"
+							}
+						},
+						"method": "PUT",
+						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\":\"649c096b2a8f79163e6f29e4\"\r\n}",
+							"raw": "{\r\n    \"quantity\":\"5\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -500,29 +509,17 @@
 					"response": []
 				},
 				{
-					"name": "Update Cart",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"quantity\":\"5\",\r\n    \"user\":\"6494386a3ab36fd6763ec745\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:9435/api/v1/cart/6495940dce367d71c08a5651"
-					},
-					"response": []
-				},
-				{
 					"name": "GET CART",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjUxZjg4NjNjMTY3MTRlM2NiNTJmYiIsImlhdCI6MTY4OTY2MDcwNywiZXhwIjoxNjg5NzQ3MTA3fQ.54neqFXTX1gfjdVxsaQ7dslKvg2CsB9aak9_dv25wUY"
+							}
+						},
 						"method": "GET",
 						"header": [],
-						"url": "localhost:9435/api/v1/cart/64995a4aaf92bd17a0394b73"
+						"url": "localhost:9435/api/v1/cart/getCart"
 					},
 					"response": []
 				},
@@ -552,11 +549,17 @@
 				{
 					"name": "Checkout Order",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjUxZjg4NjNjMTY3MTRlM2NiNTJmYiIsImlhdCI6MTY4OTY2MDcwNywiZXhwIjoxNjg5NzQ3MTA3fQ.54neqFXTX1gfjdVxsaQ7dslKvg2CsB9aak9_dv25wUY"
+							}
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{  \r\n    \"userId\":\"649c096b2a8f79163e6f29e4\",\r\n    \"street1\": \"line 1 of address\",\r\n    \"street2\": \"line 2 of address\",\r\n    \"city\": \"some city\",\r\n    \"state\": \"some state\",\r\n    \"country\": \"some country\"\r\n}",
+							"raw": "{\r\n    \"address\": {\r\n        \"street1\": \"line 1 of address\",\r\n        \"street2\": \"line 2 of address\",\r\n        \"city\": \"some city\",\r\n        \"state\": \"some state\",\r\n        \"country\": \"some country\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -571,20 +574,14 @@
 					"name": "Place Order",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjUxZjg4NjNjMTY3MTRlM2NiNTJmYiIsImlhdCI6MTY4OTY2MDcwNywiZXhwIjoxNjg5NzQ3MTA3fQ.54neqFXTX1gfjdVxsaQ7dslKvg2CsB9aak9_dv25wUY"
+							}
 						},
 						"method": "POST",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"user\":\"649c096b2a8f79163e6f29e4\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:9435/api/v1/order/place-order/cod"
+						"url": "localhost:9435/api/v1/order/place-order"
 					},
 					"response": []
 				},
@@ -627,12 +624,12 @@
 						"auth": {
 							"type": "bearer",
 							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWE4NmJhMWFkNzVkZWI1YmQ1YTRmYSIsImlhdCI6MTY4Nzg0ODc2NiwiZXhwIjoxNjg3OTM1MTY2fQ.Sh5_9C4jKQo-B8qfsQpnzM1-Sby3hTweQ0SHFGdzJJ8"
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjUxZjg4NjNjMTY3MTRlM2NiNTJmYiIsImlhdCI6MTY4OTY2MDcwNywiZXhwIjoxNjg5NzQ3MTA3fQ.54neqFXTX1gfjdVxsaQ7dslKvg2CsB9aak9_dv25wUY"
 							}
 						},
 						"method": "GET",
 						"header": [],
-						"url": "localhost:9435/api/v1/order/me"
+						"url": "localhost:9435/api/v1/order/Allorders"
 					},
 					"response": []
 				},
@@ -1094,7 +1091,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"orderId\": \"649d609a7a6083e16d433b88\",\r\n  \"driverId\": \"649eb0b02bde95235298b1d3\",\r\n  \"price\": 50,\r\n  \"returnitem\": false,\r\n  \"dilverdAddress\": \"xyz, berline\",\r\n  \"payment\": \"UPI\"\r\n}",
+							"raw": "{\r\n  \"orderId\": \"64b63134b48a525755060410\",\r\n  \"driverId\": \"649eb0b02bde95235298b1d3\",\r\n  \"returnitem\": false,\r\n  \"dilverdAddress\": \"xyz, berline\",\r\n  \"payment\": \"UPI\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
