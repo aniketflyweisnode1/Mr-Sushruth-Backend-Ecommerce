@@ -48,7 +48,4 @@ const getSchedule = async (req, res) => {
   }
 };
 
-module.exports = {
-  orderSchedule,
-  getSchedule
-}
+module.exports = { orderSchedule, getSchedule }

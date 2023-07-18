@@ -158,151 +158,53 @@ async function updateStock(id, quantity) {
 
   await product.save({ validateBeforeSave: false });
 }
-
-// // delete Order -- Admin
-// const deleteOrder = catchAsyncErrors(async (req, res, next) => {
-//   const order = await Order.findById(req.params.id);
-
-//   if (!order) {
-//     return next(new ErrorHander("Order not found with this Id", 404));
-//   }
-
-//   await order.remove();
-
-//   res.status(200).json({
-//     success: true,
-//   });
-// });
-
 const checkout = async (req, res, next) => {
   try {
-    await Order.findOneAndDelete({
-      user: req.body.user,
-      orderStatus: "unconfirmed",
-    });
-
-    const { user, address } = req.body;
-
-    let cart = await Cart.findOne(user)
-      .populate({
-        path: "products.product",
-        select: { review: 0 },
-      })
-      .populate({
-        path: "coupon",
-        select: "couponCode discount expirationDate",
-      });
-
+    await Order.findOneAndDelete({ user: req.user._id, orderStatus: "unconfirmed", });
+    const { address } = req.body;
+    let cart = await Cart.findOne({ user: req.user._id }).populate({ path: "products.product", select: { review: 0 }, }).populate({ path: "coupon", select: "couponCode discount expirationDate", });
     if (!cart) {
-      return res.status(400).json({
-        success: false,
-        msg: "Cart not found or empty.",
-      });
+      return res.status(400).json({ success: false, msg: "Cart not found or empty.", });
     }
-
-    const order = new Order({ user: req.body.userId, address });
-
+    const order = new Order({ user: req.user._id, address });
     let grandTotal = 0;
-
     const orderProducts = cart.products.map((cartProduct) => {
       const total = cartProduct.quantity * cartProduct.product.price;
       grandTotal += total;
-      return {
-        product: cartProduct.product._id,
-        unitPrice: cartProduct.product.price,
-        quantity: cartProduct.quantity,
-        total,
-      };
+      return { product: cartProduct.product._id, unitPrice: cartProduct.product.price, quantity: cartProduct.quantity, total, };
     });
-
     order.products = orderProducts;
-
     if (cart.coupon) {
       order.coupon = cart.coupon._id;
       order.discount = 0.01 * cart.coupon.discount * grandTotal;
     }
-
     order.grandTotal = grandTotal;
     order.shippingPrice = 10;
     order.amountToBePaid = grandTotal + order.shippingPrice - order.discount;
-
     await order.save();
-
-    await order.populate([
-      { path: "products.product", select: { reviews: 0 } },
-      {
-        path: "coupon",
-        select: "couponCode discount expirationDate",
-      },
-    ]);
-
-    return res.status(200).json({
-      success: true,
-      msg: "Order created",
-      order,
-    });
+    await order.populate([{ path: "products.product", select: { reviews: 0 } }, { path: "coupon", select: "couponCode discount expirationDate", },]);
+    return res.status(200).json({ success: true, msg: "Order created", order, });
   } catch (error) {
     next(error);
   }
 };
-
-
 const placeOrder = async (req, res, next) => {
   try {
-    console.log(req.body.user)
-    const order = await Order.findOne({
-      user: req.body.user,
-      // orderStatus: "unconfirmed",
-    });
-    // if (!order) {
-    //   return res.status(404).json({ message: "No unconfirmed order found" });
-    // }
-
-    console.log(order);
-
-    const amount = order.amountToBePaid;
-
-    const orderOptions = {
-      amount: amount * 100,
-      currency: "INR",
-    };
-    console.log(orderOptions);
-
-    // const paymentGatewayOrder = await razorpayInstance.orders.create(
-    //   orderOptions
-    // );
-
-    // order.paymentGatewayOrderId = paymentGatewayOrder.id;
+    const order = await Order.findOne({ user: req.user._id, orderStatus: "unconfirmed", });
+    if (!order) {
+      return res.status(404).json({ message: "No unconfirmed order found" });
+    }
     order.orderStatus = "confirmed";
     await order.save();
-
-    return res.status(200).json({
-      msg: "order id",
-      // orderId: paymentGatewayOrder.id,
-      amount: amount * 100,
-    });
+    return res.status(200).json({ msg: "order id", data: order });
   } catch (error) {
     console.log(error)
     res.status(500).json({ message: `Could not place order ${error.message}` });
-    //next(error);
   }
 };
-
-// const calculateOrderTotal = (products) => {
-//   let grandTotal = 0;
-//   let discount = 0;
-//   let shippingPrice = 0;
-
-//   // Perform calculations based on your requirements
-//   // You can iterate over the products array and calculate the total, discounts, and shipping price
-
-//   return { grandTotal, discount, shippingPrice };
-// };
-
 const placeOrderCOD = async (req, res, next) => {
   try {
-    const userId = req.body.user;
-
+    const userId = req.user._id;
     // Check if there is an unconfirmed order for the user
     // const unconfirmedOrder = await Order.findOne({
     //   user: userId,
@@ -361,36 +263,16 @@ const placeOrderCOD = async (req, res, next) => {
       .json({ msg: "An error occurred while placing the order." });
   }
 };
-
 const getOrders = async (req, res, next) => {
   try {
-    const orders = await Order.find({
-      user: req.user.id,
-      orderStatus: "confirmed",
-    }).populate({
-      path: "products.product",
-      select: {
-        reviews: 0
-      }
-    }).populate({
-      path: "coupon",
-      select: "couponCode discount expirationDate"
-    });
-    console.log(`user=${user}`)
-
-    return res.status(200).json({
-      success: true,
-      msg: "orders of user",
-      orders
-    })
+    const orders = await Order.find({ user: req.user._id, orderStatus: "confirmed" }).populate({ path: "products.product", select: { reviews: 0 } }).populate({ path: "coupon", select: "couponCode discount expirationDate" });
+    return res.status(200).json({ success: true, msg: "orders of user", orders })
   } catch (error) {
     res.status(400).json({
       message: error.message
     })
   }
 };
-
-
 const orderReturn = async (req, res) => {
   try {
     const orderId = req.params.id;
@@ -418,7 +300,6 @@ const orderReturn = async (req, res) => {
     })
   }
 }
-
 const GetAllReturnOrderbyUserId = async (req, res) => {
   try {
     const data = await OrderReturn.find({ user: req.params.userId });
@@ -438,7 +319,6 @@ const GetAllReturnOrderbyUserId = async (req, res) => {
     })
   }
 }
-
 const AllReturnOrder = async (req, res) => {
   try {
     const data = await OrderReturn.find();
@@ -452,7 +332,6 @@ const AllReturnOrder = async (req, res) => {
     })
   }
 }
-
 const GetReturnByOrderId = async (req, res) => {
   try {
     const data = await OrderReturn.findOne({ orderId: req.params.id });
@@ -470,7 +349,6 @@ const GetReturnByOrderId = async (req, res) => {
     })
   }
 }
-
 // const getAllOrders = catchAsyncErrors(async (req, res, next) => {
 //   const orders = await Order.find().populate({path: 'user', options: {strictPopulate: true}})
 

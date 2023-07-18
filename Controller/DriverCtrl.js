@@ -124,27 +124,20 @@ exports.AssignOrdertoDriver = async (req, res) => {
     try {
         const orderData = await order.findById({ _id: req.body.orderId });
         const productId = orderData.products[0].product;
-        console.log(productId)
         const productData = await product.findOne({ _id: productId });
-        console.log(productData)
-        const UserData = await address.find({ user: orderData.user })
         const userData = await User.findById({ _id: orderData.user })
-        console.log(productData.images)
         if (!orderData) {
-            return res.status(500).json({
-                message: "Order not found "
-            })
+            return res.status(500).json({ message: "Order not found " })
         } else {
             const data = {
                 orderId: req.body.orderId,
                 driverId: req.body.driverId,
-                image: productData.images[0],
-                order: orderData,
-                price: req.body.price,
+                image: productData.images[0].img,
+                price: orderData.amountToBePaid,
                 returnitem: req.body.returnitem,
                 pickuporder: req.body.dilverdAddress,
                 payment: req.body.payment,
-                useraddress: UserData,
+                useraddress: orderData.address,
                 username: userData.name,
                 userMobile: userData.phone
             }

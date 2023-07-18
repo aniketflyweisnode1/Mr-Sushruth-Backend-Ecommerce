@@ -126,21 +126,11 @@ exports.registerEmailUser = catchAsyncErrors(async (req, res, next) => {
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   const { phone } = req.body;
 
-  if (!phone/*  || !password */) {
+  if (!phone) {
     return next(new ErrorHander("Please Your Phone No.", 400));
   }
 
-  const user = await User.findOne({ phone, role: "User" })/* .select(
-    "+password"
-  ) */;
-
-  // const isPasswordMatched = await user.comparePassword(password);
-
-  // if (!isPasswordMatched) {
-  //   return next(new ErrorHander("Invalid  password", 400));
-  // }
-
-
+  const user = await User.findOne({ phone, role: "User" })
   if (!user) {
     return next(new ErrorHander("Invalid phone Number", 401));
   }
@@ -148,15 +138,9 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   if (user) {
     // const otp = await sendOtp(user, "account_verification");
 
-    const otp = OTP.generateOTP()
-    const Token = token.generateJwtToken(user._id);
-
-    return res.status(201).json({
-      success: true,
-      Id: user._id,
-      Token: Token,
-      otp: otp
-    })
+    const otp = await OTP.generateOTP()
+    let update = await User.findByIdAndUpdate({ _id: user._id }, { $set: { otp: otp } }, { new: true })
+    return res.status(201).json({ success: true, Id: update._id, otp: otp })
   }
 
   sendToken(user, 200, res);

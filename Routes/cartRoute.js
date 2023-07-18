@@ -1,15 +1,11 @@
-const {
-  addToCart,
-  getCart,
-  updateQuantity,
-  applyCoupon
-} = require("../Controller/cartCtrl");
+const { addToCart, getCart, updateQuantity, applyCoupon } = require("../Controller/cartCtrl");
+const { isAuthenticatedUser } = require("../Middleware/auth");
 
 const router = require("express").Router();
 
-router.post("/:id", addToCart);
-router.put("/:id", updateQuantity);
-router.get("/:id", getCart);
+router.post("/:id", isAuthenticatedUser, addToCart);
+router.put("/:id", isAuthenticatedUser, updateQuantity);
+router.get("/getCart", isAuthenticatedUser, getCart);
 router.put("/coupon", applyCoupon);
 
 module.exports = router;  

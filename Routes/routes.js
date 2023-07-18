@@ -7,7 +7,7 @@ router.use("/user", require("./userRoute"));
 router.use("/product", require("./productRoute"));
 router.use("/catg", require("./categoryRoute"));
 router.use("/cart", require("./cartRoute"));
-router.use("/order", require("./ShoppingCartOrderRoute"));
+router.use("/order", require("./order"));
 router.use("/help", require("./helpandSupportRoute"));
 router.use("/banner", require("./bannerRoute"));
 router.use("/term", require("./termRoute"));
