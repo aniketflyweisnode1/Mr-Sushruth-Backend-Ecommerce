@@ -89,7 +89,7 @@ const getCategory = catchAsyncErrors(async (req, res) => {
 
 const getallCategory = catchAsyncErrors(async (req, res) => {
   try {
-    const getallCategory = await Category.find();
+    const categories = await Category.find();
   res.status(201).json({
     success: true,
     categories,
