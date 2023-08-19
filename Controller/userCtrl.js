@@ -131,8 +131,11 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   }
 
   const user = await User.findOne({ phone, role: "User" })
+  // if (!user) {
+  //   return next(new ErrorHander("Invalid phone Number", 401));
+  // }
   if (!user) {
-    return next(new ErrorHander("Invalid phone Number", 401));
+    return res.status(404).json({ error: 'User not found' });
   }
 
   if (user) {

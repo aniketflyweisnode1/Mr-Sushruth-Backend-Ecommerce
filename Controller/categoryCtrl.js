@@ -152,12 +152,13 @@ const createSubCategory = catchAsyncErrors(async (req, res, next) => {
 
 ////////////////////////////////////////// TOTAL CATEGORY  //////////////////////////////////
 
-const TotalCategory = catchAsyncErrors(async (req, res, next) => {
+const lengthCategory = catchAsyncErrors(async (req, res, next) => {
   try {
     const data = await Category.find();
     res.status(200).json({
       total: data.length,
     });
+    console.log(data);
   } catch (err) {
     console.log(err);
     res.status(400).json({
@@ -174,5 +175,5 @@ module.exports = {
   getCategory,
   getallCategory,
   createSubCategory,
-  TotalCategory
+  lengthCategory
 }
