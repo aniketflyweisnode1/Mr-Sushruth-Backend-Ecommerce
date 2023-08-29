@@ -17,7 +17,7 @@ const createCategory = catchAsyncErrors(async (req, res, next) => {
   console.log(data)
   const category = await Category.create(data);
   res.status(201).json({
-    message : `${name} category created successfully`,
+    // message : `${name} category created successfully`,
     data: category,
     status: 200
   });
@@ -167,6 +167,16 @@ const lengthCategory = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+const getSubcategory = catchAsyncErrors(async (req, res, next) => {
+try {
+  const subcategories = await SubCategory.find();
+  res.status(200).json(subcategories);
+} catch (error) {
+  console.error(error);
+  res.status(500).json({ message: 'Error fetching subcategories' });
+}
+});
+
 module.exports = {
   createCategory,
   updateCategory,
@@ -175,5 +185,6 @@ module.exports = {
   getCategory,
   getallCategory,
   createSubCategory,
-  lengthCategory
+  lengthCategory,
+  getSubcategory
 }
