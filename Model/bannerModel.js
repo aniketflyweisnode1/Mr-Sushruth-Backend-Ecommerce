@@ -1,18 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-
-const bannerSchema = mongoose.Schema({
-    image: {
+const bannerSchema = new mongoose.Schema({
+    name: {
         type: String,
-        require: true,
+        required: [true, "name Banner Required"],
     },
-    desc: {
-        type: String,
-        require: false
-    }
-})
+    image: {
+        type: String
+    },
+    
+});
 
-const banner = mongoose.model('banner', bannerSchema);
-
-module.exports = banner;
-
+module.exports = mongoose.model("Banner", bannerSchema);
