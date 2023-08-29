@@ -177,7 +177,21 @@ try {
 }
 });
 
+
+const getSubcategorybyId = catchAsyncErrors(async (req, res, next) => {
+  const categoryId = req.params.categoryId;
+
+  try {
+    const subcategories = await SubCategory.find({ parentCategory: categoryId });
+    res.status(200).json(subcategories);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching subcategories' });
+  }
+});
+
 module.exports = {
+  getSubcategorybyId,
   createCategory,
   updateCategory,
   removeCategory,

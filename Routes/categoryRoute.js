@@ -7,7 +7,8 @@ const {
   removeCategory,
   createSubCategory,
   lengthCategory,
-  getSubcategory
+  getSubcategory,
+  getSubcategorybyId
 } = require("../Controller/categoryCtrl");
 const { authorizeRoles } = require("../Middleware/auth");
 
@@ -25,5 +26,6 @@ router.post("/subcategory", authorizeRoles("admin"), createSubCategory);
 router.get("/total-categories", lengthCategory);
 
 router.get("/subcategory/get",  getSubcategory);
+router.get("/subcategoryId/:categoryId",  getSubcategorybyId);
 
 module.exports = router;  
