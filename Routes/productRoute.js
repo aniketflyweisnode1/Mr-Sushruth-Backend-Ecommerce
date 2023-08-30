@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  getAllProducts,
+  searchAllProducts,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -33,7 +33,7 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage: storage });
 const router = express.Router();
 
-router.get("/", getAllProducts);
+router.get("/search", searchAllProducts);
 
 router.get("/by/category/:id", authorizeRoles("Admin"), getProductByCategory);
 router.post("/add/wishlist/:id", isAuthenticatedUser, createWishlist);
@@ -42,7 +42,7 @@ router.get("/wishlist/me", isAuthenticatedUser, myWishlist);
 
 router.get("/admin/products", getAdminProducts);
 
-router.post("/admin/product/new", upload.array("image"), isAuthenticatedUser, authorizeRoles("Admin"), createProduct);
+router.post("/admin/product/new", upload.array("image"), createProduct);
 
 router.put("/admin/product/:id", isAuthenticatedUser, updateProduct)
 router.delete("/admin/product/:id", isAuthenticatedUser, deleteProduct);

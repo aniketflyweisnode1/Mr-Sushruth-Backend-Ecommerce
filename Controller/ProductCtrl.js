@@ -36,7 +36,7 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
+exports.searchAllProducts = catchAsyncErrors(async (req, res, next) => {
   const productsCount = await Product.count();
   let apiFeature = await Product.aggregate([
     {
