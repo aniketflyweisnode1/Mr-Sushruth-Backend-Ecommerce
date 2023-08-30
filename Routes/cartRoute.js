@@ -5,7 +5,7 @@ const router = require("express").Router();
 
 router.post("/:id", isAuthenticatedUser, addToCart);
 router.put("/:id", isAuthenticatedUser, updateQuantity);
-router.get("/getCart", isAuthenticatedUser, getCart);
+router.get("/", isAuthenticatedUser, getCart);
 router.put("/coupon", applyCoupon);
 
 module.exports = router;  
