@@ -236,3 +236,32 @@ exports.decreaseQuantity = async (req, res, next) => {
     res.status(500).json({ message: 'Error decreasing quantity in cart' });
   }
 };
+
+exports.deletProduct = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const userId = req.user._id; // Get the user ID from the authenticated user
+
+    // Find or create the user's cart
+    let cart = await Cart.findOne({ user: userId });
+    // Find the product in the cart and remove it
+    const productIndex = cart.products.findIndex(
+      (product) => product.product.toString() === productId
+    );
+
+    if (productIndex === -1) {
+      return res.status(404).json({ message: "Product not found in cart" });
+    }
+
+    // Remove the product from the cart
+    cart.products.splice(productIndex, 1);
+
+    // Save the updated cart
+    await cart.save();
+
+    return res.status(200).json({ message: "Product removed from cart" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
