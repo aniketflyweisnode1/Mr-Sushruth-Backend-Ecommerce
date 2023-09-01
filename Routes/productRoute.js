@@ -35,7 +35,7 @@ const router = express.Router();
 
 router.get("/search", searchAllProducts);
 
-router.get("/by/category/:id", authorizeRoles("Admin"), getProductByCategory);
+router.get("/by/category/:id",  getProductByCategory);
 router.post("/add/wishlist/:id", isAuthenticatedUser, createWishlist);
 router.put("/remove/wishlist/:id", isAuthenticatedUser, removeFromWishlist);
 router.get("/wishlist/me", isAuthenticatedUser, myWishlist);

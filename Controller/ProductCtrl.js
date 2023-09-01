@@ -345,7 +345,7 @@ exports.myWishlist = catchAsyncErrors(async (req, res, next) => {
 
 exports.getProductByCategory = catchAsyncErrors(async (req, res, next) => {
   try {
-    const producyBycategory = await Product.find({ category: req.params.id })
+    const producyBycategory = await Product.find({ subCategory: req.params.id })
 
     res.status(200).json({
       message: "get Successfully",
