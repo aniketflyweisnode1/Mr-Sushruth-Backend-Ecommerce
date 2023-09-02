@@ -8,7 +8,8 @@ const {
   createSubCategory,
   lengthCategory,
   getSubcategory,
-  getSubcategorybyId
+  getSubcategorybyId,
+  deletesubCategory
 } = require("../Controller/categoryCtrl");
 const { authorizeRoles } = require("../Middleware/auth");
 
@@ -21,6 +22,7 @@ router.put("/update/:id", authorizeRoles("admin"), updateCategory);
 router.get("/new/:id", /* authorizeRoles("admin"), */ getCategory);
 router.get("/", /* authorizeRoles("admin"), */ getallCategory);
 router.delete("/delete/category/:id",deleteCategory);
+router.delete("/delete/sub/category/:id",deletesubCategory);
 router.delete("/delete/:id", authorizeRoles("admin"), removeCategory);
 router.post("/subcategory",  createSubCategory);
 router.get("/total-categories", lengthCategory);

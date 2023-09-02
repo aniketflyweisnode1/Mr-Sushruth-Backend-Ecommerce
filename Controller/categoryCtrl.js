@@ -55,6 +55,22 @@ const deleteCategory =async (req, res) => {
     throw new Error(error);
   }
 };
+const deletesubCategory =async (req, res) => {
+  const { id } = req.params;
+  try {
+    const getaCategory = await SubCategory.findById(id);
+  // const { id } = req.params;
+  // const category = await Category.findById(id);
+  // console.log(category);
+  // if (!category) {
+  //   res.status(404).json({ message: "Category Not Found", status: 404, data: {} });
+  // } else {
+    const deletedCategory = await SubCategory.findByIdAndDelete(getaCategory);
+    res.json(deletedCategory);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 
 
 ////////////////////////////////////////// REMOVE CATEGORY  //////////////////////////////////
@@ -205,5 +221,6 @@ module.exports = {
   getallCategory,
   createSubCategory,
   lengthCategory,
-  getSubcategory
+  getSubcategory,
+  deletesubCategory
 }
