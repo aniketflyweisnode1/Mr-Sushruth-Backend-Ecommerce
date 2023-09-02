@@ -39,19 +39,23 @@ const updateCategory = catchAsyncErrors(async (req, res, next) => {
 
 ////////////////////////////////////////// DELETE CATEGORY  //////////////////////////////////
 
-const deleteCategory = catchAsyncErrors(async (req, res) => {
+const deleteCategory =async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedCategory = await Category.findByIdAndDelete(id);
-      await SubCategory.deleteMany({parentCategory: req.params.id});
-  res.status(200).json({
-    message: "Deleted Successfully"
-  })
+    const getaCategory = await Category.findById(id);
+  // const { id } = req.params;
+  // const category = await Category.findById(id);
+  // console.log(category);
+  // if (!category) {
+  //   res.status(404).json({ message: "Category Not Found", status: 404, data: {} });
+  // } else {
+    const deletedCategory = await Category.findByIdAndDelete(getaCategory);
     res.json(deletedCategory);
   } catch (error) {
     throw new Error(error);
   }
-});
+};
+
 
 ////////////////////////////////////////// REMOVE CATEGORY  //////////////////////////////////
 
@@ -76,6 +80,7 @@ const removeCategory = catchAsyncErrors(async (req, res, next) => {
 ////////////////////////////////////////// GET CATEGORY  //////////////////////////////////
 
 const getCategory = catchAsyncErrors(async (req, res) => {
+  console.log("hi");
   const { id } = req.params;
   try {
     const getaCategory = await Category.findById(id);
