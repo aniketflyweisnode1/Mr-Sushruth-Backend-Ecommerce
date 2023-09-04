@@ -4,8 +4,7 @@ const couponController = require("../Controller/couponCtrl");
 
 router.post(
   "/",
-  isAuthenticatedUser,
-  authorizeRoles("admin"),
+  
   couponController.createCoupon
 );
 
@@ -14,7 +13,7 @@ router.get(
   couponController.getAllCoupons
 );
 
-router.get("/", isAuthenticatedUser, couponController.getActiveCoupons);
+router.get("/",  couponController.getActiveCoupons);
 
 router.delete(
   "/:couponId",
