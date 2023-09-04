@@ -20,5 +20,6 @@ router.use("/aboutUs", require("./aboutusRoute"));
 router.use("/faqs", require("./faqRoute"));
 router.use("/wallet", require("./myWalletRoute"));
 router.use("/schedule", require("./myScheduleRoute"));
+router.use("/address", require("./addressRoute"));
 
 module.exports = router;
