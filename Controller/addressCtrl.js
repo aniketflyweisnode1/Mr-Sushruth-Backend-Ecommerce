@@ -42,7 +42,7 @@ exports.deleteAddress = catchAsyncErrors(async (req, res, next) => {
       new ErrorHander(`Address does not exist with Id: ${req.params.id}`, 400)
     );
   }
-  await address.remove();
+  await address.deleteOne();
   res.status(200).json({
     success: true,
     message: "Address Deleted Successfully",

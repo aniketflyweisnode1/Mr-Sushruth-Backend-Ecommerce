@@ -2,13 +2,13 @@ const router = require("express").Router();
 const { isAuthenticatedUser } = require("../Middleware/auth");
 const {
     createAddress,
-    getAddress,
-    // updateAboutUs,
-    // deleteAboutUs,
+    getAddressById,
+    updateAddress,
+    deleteAddress,
 } = require("../Controller/addressCtrl");
 
 router.post("/",isAuthenticatedUser, createAddress);
-// router.get("/", getAboutUs);
-// router.put("/:id", updateAboutUs);
-// router.delete("/:id", deleteAboutUs);
+router.get("/", isAuthenticatedUser,getAddressById);
+router.put("/:id", updateAddress);
+router.delete("/:id", deleteAddress);
 module.exports = router;

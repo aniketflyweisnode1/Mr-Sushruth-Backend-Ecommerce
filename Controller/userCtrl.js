@@ -201,3 +201,21 @@ exports.resendOTP = catchAsyncErrors(async (req, res) => {
     res.status(400).send({ error: error.message });
   }
 });
+
+
+exports.userPhoto = async (req, res, next) => {
+  try {
+    const teacherId = req.params.id;
+    let image;
+    if (req.file) {
+      image = req.file.path;
+    }
+    const updatedTeacher = await User.findByIdAndUpdate(teacherId,{name:req.body.name,
+      
+        email:req.body.email,
+      profilePicture: image },{ new: true });
+    return res.json(updatedTeacher);
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
