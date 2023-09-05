@@ -208,7 +208,7 @@ const orderByCOD = async(req,res) => {
   }
 }
 
-exports.decreaseQuantity = async (req, res, next) => {
+exports.decreaseQty = async (req, res, next) => {
   const { productId } = req.params;
   const userId = req.user._id; // Assuming you're using user authentication
 
@@ -270,5 +270,48 @@ exports.deletProduct = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+ 
+exports.decreaseQty1 = async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const userId = req.user._id; // Assuming you have user authentication
+
+    // Find the user's cart
+    const cart = await Cart.findOne({ user: userId });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    // Find the item with the given product ID in the cart
+    const productIndex = cart.products.findIndex((cartProduct) => {
+      return cartProduct.product.toString() == product;
+    });
+
+    if (!productIndex) {
+      return res.status(404).json({ message: 'Product not found in the cart' });
+    }
+
+    // Decrease the quantity by 1 (assuming you want to decrease by 1)
+    if (productIndex.quantity > 1) {
+      productIndex.quantity -= 1;
+    } else {
+      // Remove the item from the cart if the quantity becomes 0
+      cart.items = cart.items.filter((item) => !item.product.equals(productId));
+    }
+
+    // Recalculate the cart total
+    cart.total = calculateCartTotal(cart.items, selectedProduct.sizePrice);
+
+    // Save the updated cart
+    await cart.save();
+
+    return res.status(200).json({ message: 'Product quantity decreased successfully', cart: cart });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
