@@ -31,7 +31,7 @@ exports.addToCart = async (req, res, next) => {
     await cart.save();
 
     return res.status(200).json({
-      msg: "product added to cart",
+      msg: "product added to cart",cart
     });
   } catch (error) {
     next(error);
@@ -79,25 +79,27 @@ exports.updateQuantity = async (req, res, next) => {
 };
 
 exports.getCart = async (req, res, next) => {
-    try {
-        const cart = await Cart.findOne({user: req.user.id});
-        console.log(req.user.id);
-      if(!cart){
-        return res.status(201).json({
-          message: "No Data Found "
-        })
-      }
-        const cartResponse = await getCartResponse(cart);
+  try {
+    const cart = await Cart.findOne({ user: req.user.id });
 
-        return res.status(200).json({
-            success: true,
-            msg: "cart",
-            cart: cartResponse
-        })
-    } catch (error) {
-        next(error);
+    if (!cart) {
+      return res.status(201).json({
+        message: "No Data Found"
+      });
     }
-}
+
+    const cartResponse = await getCartResponse(cart, req, res);
+
+    return res.status(200).json({
+      success: true,
+      msg: "cart",
+      cart: cartResponse
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 exports.applyCoupon = async (req, res, next) => {
     try {
@@ -141,7 +143,7 @@ const createCart = async (userId) => {
   }
 };
 
-const getCartResponse = async ( cart, req,res) => {
+const getCartResponse = async (cart, req, res) => {
   try {
     await cart.populate([
       { path: "products.product", select: { reviews: 0 } },
@@ -152,29 +154,34 @@ const getCartResponse = async ( cart, req,res) => {
       cart.coupon = undefined;
       cart.save();
     }
+
     const cartResponse = cart.toObject();
-   console.log(cartResponse);
+    console.log(cartResponse);
 
     let discount = 0;
     let total = 0;
-    cartResponse.products.forEach((cartProduct) => {
-      console.log(cartProduct)
-      if(cartProduct.product == null || cartProduct.product ==0 ){
-      //   cart.product= cart.product.filter(function(item) {
-      //     return item !== 
-      // })
-        cart.products = [];
-        cart.quantity =0 
-        cart.subTotal = 0
-        let data = cart.save();
-        return res.status(500).json({
-          message: "Product is not Avaible in cart "
-        })
-      }else{
+
+    // Filter out products that are null or have a quantity of 0
+    cartResponse.products = cartResponse.products.filter((cartProduct) => {
+      if (!cartProduct.product || cartProduct.quantity === 0) {
+        return false;
+      }
+
       cartProduct.total = cartProduct.product.price * cartProduct.quantity;
       total += cartProduct.total;
-      }
+      return true;
     });
+
+    if (cartResponse.products.length === 0) {
+      // If there are no valid products in the cart, reset cart properties
+      cart.quantity = 0;
+      cart.subTotal = 0;
+      await cart.save();
+
+      return res.status(500).json({
+        message: "No valid products in the cart"
+      });
+    }
 
     if (cartResponse.coupon) {
       discount = 0.01 * cart.coupon.discount * total;
