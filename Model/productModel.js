@@ -28,7 +28,7 @@ const productSchema = mongoose.Schema({
     {
       img: {
         type: String,
-        default: 'default.jpg', // Provide the default image path here
+        default: 'https://res.cloudinary.com/dtijhcmaa/image/upload/v1687429143/product-images/plbhsjutcjkawqv4onal.jpg', // Provide the default image path here
       },
     },
   ],
