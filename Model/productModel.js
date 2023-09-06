@@ -24,10 +24,14 @@ const productSchema = mongoose.Schema({
   // images: [
   //   { img: { type: String } }
   // ],
-  images:{
-type:[String],
-default:"https://res.cloudinary.com/dtijhcmaa/image/upload/v1687429143/product-images/plbhsjutcjkawqv4onal.jpg"
-  },
+  images: [
+    {
+      img: {
+        type: String,
+        default: 'default.jpg', // Provide the default image path here
+      },
+    },
+  ],
   size: {
     type: String
 
