@@ -24,7 +24,7 @@ const productSchema = mongoose.Schema({
   // images: [
   //   { img: { type: String } }
   // ],
-  image:{
+  images:{
 type:[String],
 default:"https://res.cloudinary.com/dtijhcmaa/image/upload/v1687429143/product-images/plbhsjutcjkawqv4onal.jpg"
   },
