@@ -12,6 +12,7 @@ const storage = new CloudinaryStorage({
   },
 });
 const upload = multer({ storage: storage });
+router.route("/google/login").post(userCtrl.socialLogin);
 router.post("/create", userCtrl.registerUser);
 router.put("/email/:id", userCtrl.registerEmailUser);
 router.put("/mobile/:id", userCtrl.UpdatePhoneUser);

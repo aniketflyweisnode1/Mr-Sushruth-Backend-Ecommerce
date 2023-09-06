@@ -219,3 +219,56 @@ exports.userPhoto = async (req, res, next) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+exports.socialLogin = async (req, res) => {
+  try {
+    const { email, phone, firstName, lastName, mobile } = req.body;
+
+    // Check if a user with the provided email or phone exists
+    let user = await User.findOne({
+      $and: [{ $or: [{ email: email }, { phone: phone }] }],
+      // role: "USER",
+    });
+
+    if (user) {
+      // User found, generate a token
+      // jwt.sign({ user_id: user._id }, generateJwtToken, (err, token) => {
+        token.generateJwtToken(user._id), (err, token) => {
+        if (err) {
+          return res.status(401).json({ status: 401, msg: "Invalid Credentials" });
+        } else {
+          return res.status(200).json({
+            status: 200,
+            msg: "Login successful",
+            userId: user._id,
+            token: token,
+          });
+        }
+      };
+    } else {
+      // User not found, create a new user
+      const newUser = await User.create({ firstName, lastName, mobile, email });
+
+      if (newUser) {
+        // New user created, generate a token
+        // jwt.sign({ user_id: newUser._id }, generateJwtToken, (err, token) => {
+          token.generateJwtToken({user_id:newUser._id}), (err, token) => {
+          if (err) {
+            return res.status(401).json({ status: 401, msg: "Invalid Credentials" });
+          } else {
+            return res.status(201).json({
+              status: 201,
+              msg: "User registered and logged in successfully",
+              userId: newUser._id,
+              token: token,
+            });
+          }
+        };
+      }
+    }
+  } catch (err) {
+    console.error(err); // Log the error for debugging
+    return res.status(500).json({ status: 500, msg: "Internal server error" });
+  }
+};
