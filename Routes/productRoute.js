@@ -49,7 +49,7 @@ router.delete("/admin/product/:id", isAuthenticatedUser, deleteProduct);
 
 router.get("/:id", getProductDetails);
 
-router.put("/review", /* isAuthenticatedUser, */ createProductReview);
+router.put("/review", isAuthenticatedUser,  createProductReview);
 
 router.get("/reviews", getProductReviews)
 router.delete("/reviews", isAuthenticatedUser, deleteReview);

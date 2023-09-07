@@ -87,7 +87,8 @@ exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
 
 // Get Product Details
 exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id) .populate('reviews.user', 'profilePicture name')
+  .exec();;
 
   if (!product) {
     return next(new ErrorHander("Product not found", 404));
