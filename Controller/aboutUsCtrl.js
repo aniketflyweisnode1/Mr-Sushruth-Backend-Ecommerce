@@ -5,7 +5,9 @@ const AboutUs = require("../Model/aboutUsModel");
 const create = async (req, res) => {
     try {
         const aboutUs = await AboutUs.create(req.body);
-        return res.status(200).json("About us create successfully", aboutUs);
+        res.status(200).json({
+            details: aboutUs,
+          });
       
     } catch (err) {
         console.error(err);
@@ -14,21 +16,17 @@ const create = async (req, res) => {
 };
 const getAboutUs = async (req, res) => {
     try {
-        const aboutUs = await AboutUs.find().lean();
-        if (!aboutUs) {
-            return res.status(404).json( "About us not found");
-        }
-        return createResponse(
-            res,
-            200,
-            "About us retrieved successfully",
-            aboutUs[aboutUs.length - 1]
-        );
-    } catch (error) {
-        console.error;
-        return res.status(500).json( "Internal server error");
+        const data = await AboutUs.find();
+        // console.log(data);
+        res.status(200).json({
+            aboutus : data
+        })
+        
+    }catch(err)
+    {
+        res.status(400).send({mesage : err.mesage});
     }
-};
+}
 
 // Update the about us information
 const updateAboutUs = async (req, res) => {

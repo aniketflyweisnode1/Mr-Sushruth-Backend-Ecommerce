@@ -17,6 +17,7 @@ router.use("/driver", require("./DriverRoute"));
 router.use("/notify", require("./notificationRoute"));
 router.use("/coupon", require("./couponRoute"));
 router.use("/aboutUs", require("./aboutusRoute"));
+router.use("/contactUs", require("./contactUsRoute"));
 router.use("/faqs", require("./faqRoute"));
 router.use("/wallet", require("./myWalletRoute"));
 router.use("/schedule", require("./myScheduleRoute"));

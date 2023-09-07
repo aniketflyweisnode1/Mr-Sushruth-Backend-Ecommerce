@@ -21,17 +21,19 @@ const productSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  // images: [
-  //   { img: { type: String } }
-  // ],
   images: [
-    {
-      img: {
-        type: String,
-        default: 'https://res.cloudinary.com/dtijhcmaa/image/upload/v1687429143/product-images/plbhsjutcjkawqv4onal.jpg', // Provide the default image path here
-      },
-    },
+    { img: { type: String, default:"" } }
   ],
+  // images: [
+  //   {
+  //     img: {
+  //       type: String,
+  //       default:""
+  //       // default: 'https://res.cloudinary.com/dtijhcmaa/image/upload/v1687429143/product-images/plbhsjutcjkawqv4onal.jpg', // Provide the default image path here
+  //     },
+  //   },
+  // ],
+  
   size: {
     type: String
 
