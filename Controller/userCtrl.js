@@ -204,15 +204,19 @@ exports.resendOTP = catchAsyncErrors(async (req, res) => {
 
 
 exports.userPhoto = async (req, res, next) => {
+  console.log("hi");
   try {
-    const teacherId = req.params.id;
+    const teacherId = req.params.userId;
     let image;
     if (req.file) {
       image = req.file.path;
     }
+    // console.log(req.file);
+    // return;
+
     const updatedTeacher = await User.findByIdAndUpdate(teacherId,{name:req.body.name,
       
-        email:req.body.email,
+        phone:req.body.phone,
       profilePicture: image },{ new: true });
     return res.json(updatedTeacher);
   } catch (error) {
@@ -270,5 +274,37 @@ exports.socialLogin = async (req, res) => {
   } catch (err) {
     console.error(err); // Log the error for debugging
     return res.status(500).json({ status: 500, msg: "Internal server error" });
+  }
+};
+
+exports.getAllUser = async (req, res, next) => {
+  try {
+    const users = await User.find({ role: "User" });
+    res.status(200).json({
+      status: 200,
+      users,
+      total: users.length
+    });
+  } catch (error) {
+    res.status(200).json({ error: "Something went wrong" });
+  }
+};
+exports.getUserbyId = async (req, res, next) => {
+  console.log("hi");
+  const id = req.params.id;
+  try {
+    const users = await User.findById(id);
+    if (!users) {
+      return next(
+        new ErrorHander(`User does not exist with Id: ${req.params.id}`, 400)
+      );
+    }
+    res.status(200).json({
+      success: true,
+      users,
+      total: users.length
+    });
+  } catch (error) {
+    res.status(200).json({ error: `Something went wrong with Id: ${req.params}` });
   }
 };

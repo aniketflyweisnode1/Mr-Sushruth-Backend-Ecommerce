@@ -68,6 +68,7 @@ exports.getAllUser = async (req, res, next) => {
   }
 };
 exports.getUserbyId = async (req, res, next) => {
+  console.log("hi");
   const id = req.params.id;
   try {
     const users = await User.findById(id);
