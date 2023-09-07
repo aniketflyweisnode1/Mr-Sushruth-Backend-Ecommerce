@@ -31,7 +31,7 @@ exports.addToCart = async (req, res, next) => {
     await cart.save();
 
     return res.status(200).json({
-      msg: "product added to cart",cart
+      msg: "product added to cart",
     });
   } catch (error) {
     next(error);
@@ -186,11 +186,13 @@ const getCartResponse = async (cart, req, res) => {
     if (cartResponse.coupon) {
       discount = 0.01 * cart.coupon.discount * total;
     }
-
+const shipping=10;
     cartResponse.subTotal = total;
     cartResponse.discount = discount;
-    cartResponse.total = total - discount;
     cartResponse.shipping = 10;
+    cartResponse.total = total - discount;
+    cartResponse.total = total + shipping;
+   
 
     return cartResponse;
   } catch (error) {
