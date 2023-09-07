@@ -45,7 +45,19 @@ const orderSchema = new mongoose.Schema({
     },
     country: {
       type: String
-    }
+    },
+    cardName: {
+      type: String
+    },
+    cardNumber: {
+      type: String
+    },
+    carExpiry: {
+      type: String
+    },
+    cvv: {
+      type: String
+    },
   },
   products: {
     type: [orderProductSchema]

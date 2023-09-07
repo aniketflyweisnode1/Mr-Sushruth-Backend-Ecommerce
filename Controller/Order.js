@@ -68,9 +68,12 @@ const getSingleOrder = catchAsyncErrors(async (req, res, next) => {
 });
 
 // get logged in user  Orders
-const myOrders = catchAsyncErrors(async (req, res, next) => {
-  const orders = await Order.find({ user: req.user });
 
+const myOrders = catchAsyncErrors(async (req, res, next) => {
+  console.log("hi");
+  const orders = await Order.find({ user: req.user.id });
+  
+console.log(orders);
   res.status(200).json({
     success: true,
     orders,
@@ -160,9 +163,10 @@ async function updateStock(id, quantity) {
 }
 const checkout = async (req, res, next) => {
   try {
-    await Order.findOneAndDelete({ user: req.user._id, orderStatus: "unconfirmed", });
+    // await Order.findOneAndDelete({ user: req.user._id, orderStatus: "unconfirmed", });
     const { address } = req.body;
     let cart = await Cart.findOne({ user: req.user._id }).populate({ path: "products.product", select: { review: 0 }, }).populate({ path: "coupon", select: "couponCode discount expirationDate", });
+    console.log(cart);
     if (!cart) {
       return res.status(400).json({ success: false, msg: "Cart not found or empty.", });
     }
@@ -174,10 +178,10 @@ const checkout = async (req, res, next) => {
       return { product: cartProduct.product._id, unitPrice: cartProduct.product.price, quantity: cartProduct.quantity, total, };
     });
     order.products = orderProducts;
-    if (cart.coupon) {
-      order.coupon = cart.coupon._id;
-      order.discount = 0.01 * cart.coupon.discount * grandTotal;
-    }
+    // if (cart.coupon) {
+    //   order.coupon = cart.coupon._id;
+    //   order.discount = 0.01 * cart.coupon.discount * grandTotal;
+    // }
     order.grandTotal = grandTotal;
     order.shippingPrice = 10;
     order.amountToBePaid = grandTotal + order.shippingPrice - order.discount;

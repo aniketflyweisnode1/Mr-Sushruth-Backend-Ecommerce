@@ -16,7 +16,7 @@ router.get("/:id", getSingleOrder);
 router.post('/return/:id', orderReturn);
 router.get('/return/:userId', GetAllReturnOrderbyUserId)
 router.get('/return/orderId/:id', GetReturnByOrderId);
-router.get("/me", isAuthenticatedUser, myOrders);
+router.get("/", isAuthenticatedUser, myOrders);
 
 
 router.put("/admin/:id", updateOrder)
