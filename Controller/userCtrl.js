@@ -308,3 +308,17 @@ exports.getUserbyId = async (req, res, next) => {
     res.status(200).json({ error: `Something went wrong with Id: ${req.params}` });
   }
 };
+
+exports.deletemyAccount = async (req, res, next) => {
+    try {
+      const userId = req.user.id; 
+  // Delete user data from the database 
+      await User.findByIdAndDelete(userId);
+  
+
+      res.status(200).json({ message: 'Account deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };

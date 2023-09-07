@@ -26,11 +26,13 @@ const router = require("express").Router();
 //   },
 // });
 // const upload = multer({ storage: storage });
+const { isAuthenticatedUser } = require("../Middleware/auth");
 router.route("/google/login").post(userCtrl.socialLogin);
 router.post("/create", userCtrl.registerUser);
 router.put("/email/:id", userCtrl.registerEmailUser);
 router.put("/mobile/:id", userCtrl.UpdatePhoneUser);
 router.post("/login", userCtrl.loginUser);
+router.delete("/delete/my/account", isAuthenticatedUser,userCtrl.deletemyAccount);
 router.post("/verify-otp/:id", userCtrl.verifyOTP);
 router.route("/update/:userId").put(upload.single('profilePicture'),userCtrl.userPhoto)
 router.get("/all", userCtrl.getAllUser);
