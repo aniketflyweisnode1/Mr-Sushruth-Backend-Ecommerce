@@ -44,8 +44,8 @@ router.get("/admin/products", getAdminProducts);
 
 router.post("/admin/product/new", upload.array("image"), createProduct);
 
-router.put("/admin/product/:id", isAuthenticatedUser, updateProduct)
-router.delete("/admin/product/:id", isAuthenticatedUser, deleteProduct);
+router.put("/update/:id", upload.array("image"),  updateProduct)
+router.delete("/delete/:id", deleteProduct);
 
 router.get("/:id", getProductDetails);
 

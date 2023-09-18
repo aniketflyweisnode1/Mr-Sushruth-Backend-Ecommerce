@@ -109,64 +109,42 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
     if (!product) {
       return next(new ErrorHander("Product not found", 404));
     }
-
-    // Images Start Here
-    console.log(req.body.images)
     let images = [];
-
-    if (req.body.images) {
-      images.push(req.body.images);
-    } else {
-      images = req.body.images;
+    for (var i = 0; i < req.files.length; i++) {
+      images.push({ img: req.files[i].path })
     }
-
-    // if (images !== undefined) {
-    //   // Deleting Images From Cloudinary
-    //   for (let i = 0; i < product.images.length; i++) {
-    //     await cloudinary.v2.uploader.destroy(product.images[i].public_id);
-    //   }
-
-    //   const imagesLinks = [];
-
-    //   for (let i = 0; i < images.length; i++) {
-    //     const result = await cloudinary.v2.uploader.upload(images[i], {
-    //       folder: "products",
-    //     });
-
-    //     imagesLinks.push({
-    //       public_id: result.public_id,
-    //       url: result.secure_url,
-    //     });
-    //   }
-
-    //   req.body.images = imagesLinks;
-    // }
-
-    product = await Product.findByIdAndUpdate(req.params.id, {
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      category: req.body.category
-    }, {
-      new: true,
-      runValidators: true,
-      useFindAndModify: false,
-    });
+    product = await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        category: req.body.category,
+        images: req.body.images, // Assuming you're updating images here
+      },
+      {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+      }
+    );
 
     res.status(200).json({
       success: true,
       product,
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(400).json({
-      message: err.message
-    })
+      message: err.message,
+    });
   }
 });
+
 // Delete Product
 
 exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
+
   const product = await Product.findById({ _id: req.params.id });
 
   if (!product) {
@@ -174,7 +152,7 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   }
 
   // Deleting Images From Cloudinary
-  await product.remove();
+  await product.deleteOne();
 
   res.status(200).json({
     success: true,
