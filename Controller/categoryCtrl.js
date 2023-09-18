@@ -190,7 +190,7 @@ const lengthCategory = catchAsyncErrors(async (req, res, next) => {
 
 const getSubcategory = catchAsyncErrors(async (req, res, next) => {
 try {
-  const subcategories = await SubCategory.find();
+  const subcategories = await SubCategory.find().populate("parentCategory");
   res.status(200).json(subcategories);
 } catch (error) {
   console.error(error);
