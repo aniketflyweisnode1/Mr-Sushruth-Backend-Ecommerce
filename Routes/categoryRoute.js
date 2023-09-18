@@ -18,7 +18,7 @@ const { authorizeRoles } = require("../Middleware/auth");
 const router = require("express").Router();
 
 router.post("/create",  createCategory);
-router.put("/update/:id", authorizeRoles("admin"), updateCategory);
+router.put("/update/:id",  updateCategory);
 router.get("/new/:id", /* authorizeRoles("admin"), */ getCategory);
 router.get("/", /* authorizeRoles("admin"), */ getallCategory);
 router.delete("/delete/category/:id",deleteCategory);
