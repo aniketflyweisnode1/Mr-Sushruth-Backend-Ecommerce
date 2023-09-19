@@ -11,7 +11,7 @@ router.use("/order", require("./order"));
 router.use("/help", require("./helpandSupportRoute"));
 router.use("/banner", require("./bannerRoute"));
 router.use("/term", require("./termRoute"));
-router.use("/privacy&policy", require("./termRoute"));
+router.use("/privacy&policy", require("./policyRoute"));
 // router.use("/verdor", require("./VendorRoute"));
 router.use("/driver", require("./DriverRoute"));
 router.use("/notify", require("./notificationRoute"));
