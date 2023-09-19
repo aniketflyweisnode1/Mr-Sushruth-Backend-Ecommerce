@@ -27,4 +27,18 @@ const getContactUs = async (req, res) => {
         res.status(400).send({mesage : err.mesage});
     }
 }
-module.exports = { create, getContactUs};
+
+const deleteContactUs = async (req, res) => {
+    try {
+        const aboutUs = await ContactUs.findByIdAndDelete(req.params.id);
+        if (!aboutUs) {
+            res.status(404).json( "ContactUs not found");
+        } else {
+            res.status(200).json( "ContactUs deleted successfully");
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json( "Server error");
+    }
+};
+module.exports = { create, getContactUs,deleteContactUs};
