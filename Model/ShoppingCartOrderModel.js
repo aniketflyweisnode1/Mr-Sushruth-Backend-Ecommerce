@@ -109,8 +109,8 @@ const orderSchema = new mongoose.Schema({
   },
   orderStatus: {
     type: String,
-    enum: ["unconfirmed", "confirmed"],
-    default: "unconfirmed",
+    enum: ["signed", "processed", "shipped", "out_for_delivery", "delivered"],
+    default: "processed",
     select: false
   },
   delivered: {

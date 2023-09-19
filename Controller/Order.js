@@ -136,7 +136,7 @@ const updateOrder = catchAsyncErrors(async (req, res, next) => {
      order.status="shipped"
      
     }
-    order.status = req.body.status;
+    order.orderStatus = req.body.status;
 
     if (req.body.status === "delivered") {
       order.deliveredAt = Date.now();
