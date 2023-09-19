@@ -25,19 +25,21 @@ exports.AddQuery = async(req,res) => {
 
 
 
-exports.getAllHelpandSupport = async(req,res) => {
-    try{
-    const data = await helpandSupport.find();
-    res.status(200).json({
+exports.getAllHelpandSupport = async (req, res) => {
+    try {
+      // Use the `populate` method to populate the `user` field
+      const data = await helpandSupport.find().populate('user');
+  
+      res.status(200).json({
         message: data
-    })
-    }catch(err){
-        console.log(err);
-        res.status(200).json({
-            message: err.message
-        })
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        message: err.message
+      });
     }
-}
+  }
 
 
 exports.getAllHelpandSupportgetByuserId = async (req, res) => {

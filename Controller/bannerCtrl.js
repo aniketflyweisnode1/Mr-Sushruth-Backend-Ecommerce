@@ -58,10 +58,10 @@ exports.getBanner = async (req, res) => {
 
 exports.getById = async (req, res) => {
     try {
-        const Banner = await banner.findById({ _id: req.params.id });
+        const Banners = await Banner.findById({ _id: req.params.id });
         res.status(200).json({
             message: "One Banners",
-            data: Banner
+            // data: Banner
         })
     } catch (err) {
         console.log(err);
@@ -73,7 +73,7 @@ exports.getById = async (req, res) => {
 
 exports.DeleteBanner = async(req,res) => {
     try{
-        const Banner = await banner.findByIdAndDelete({ _id: req.params.id });
+        const Banners = await Banner.findByIdAndDelete({ _id: req.params.id });
         res.status(200).json({
             message: "Delete Banner ",
         },)
