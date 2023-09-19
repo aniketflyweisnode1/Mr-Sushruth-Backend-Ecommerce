@@ -26,20 +26,21 @@ exports.AddQuery = async(req,res) => {
 
 
 exports.getAllHelpandSupport = async (req, res) => {
+console.log("hi");
     try {
       // Use the `populate` method to populate the `user` field
-      const data = await helpandSupport.find().populate('user');
-  
-      res.status(200).json({
-        message: data
-      });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({
-        message: err.message
-      });
+      const helpRequests = await helpandSupport.find().populate('user');
+  console.log(helpRequests);
+      res.status(200).json({ success: true, data: helpRequests });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, error: 'Internal server error' });
     }
-  }
+  };
+
+  
+
+
 
 
 exports.getAllHelpandSupportgetByuserId = async (req, res) => {

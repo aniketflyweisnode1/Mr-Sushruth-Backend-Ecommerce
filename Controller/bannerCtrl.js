@@ -61,7 +61,7 @@ exports.getById = async (req, res) => {
         const Banners = await Banner.findById({ _id: req.params.id });
         res.status(200).json({
             message: "One Banners",
-            // data: Banner
+            data: Banners
         })
     } catch (err) {
         console.log(err);

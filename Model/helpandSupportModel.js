@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 
 const helpandSupport = mongoose.Schema({
     user: {
-        type: String
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     },
     name: {
         type: String,
