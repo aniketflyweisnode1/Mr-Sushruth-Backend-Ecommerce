@@ -82,7 +82,7 @@ console.log(orders);
 
 // get all Orders -- Admin
 const getAllOrders = catchAsyncErrors(async (req, res, next) => {
-  const orders = await Order.find().populate({ path: 'user', options: { strictPopulate: true } })
+  const orders = await Order.find().populate({ path: 'products.product', options: { strictPopulate: true } })
 
   let totalAmount = 0;
 
