@@ -22,9 +22,9 @@ exports.addPrivacy = async (req,res) =>{
 exports.getPrivacy = async(req,res) => {
     try {
         const data = await policy.find();
-        console.log(data[0].privacy)
+        // console.log(data[0].privacy)
         res.status(200).json({
-            privacy  : data[0] 
+            privacy  : data 
         })
         
     }catch(err)
