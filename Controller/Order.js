@@ -128,22 +128,22 @@ const updateOrder = catchAsyncErrors(async (req, res, next) => {
       return next(new ErrorHander("Order not found with this Id", 404));
     }
 
-    if (order.orderStatus === "Delivered") {
+    if (order.status === "delivered") {
       return next(new ErrorHander("You have already delivered this order", 400));
     }
 
-    if (req.body.status === "Shipped") {
-      order.orderItems.forEach(async (o) => {
-        await updateStock(o.product, o.quantity);
-      });
+    if (req.body.status === "shipped") {
+     order.status="shipped"
+     
     }
-    order.orderStatus = req.body.status;
+    order.status = req.body.status;
 
-    if (req.body.status === "Delivered") {
+    if (req.body.status === "delivered") {
       order.deliveredAt = Date.now();
+      order.status = "delivered"
     }
-
-    await order.save({ validateBeforeSave: false });
+console.log(order);
+    await order.save();
     res.status(200).json({
       success: true,
       message: "Order successfully updated"

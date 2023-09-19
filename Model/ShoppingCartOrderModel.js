@@ -4,6 +4,7 @@ const orderTrackingSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["signed", "processed", "shipped", "out_for_delivery", "delivered"],
+    default: "processed"
   },
   date: {
     type: Date,
@@ -58,6 +59,11 @@ const orderSchema = new mongoose.Schema({
     cvv: {
       type: String
     },
+  },
+  status: {
+    type: String,
+    enum: ["signed", "processed", "shipped", "out_for_delivery", "delivered"],
+    default: "processed"
   },
   products: {
     type: [orderProductSchema]
