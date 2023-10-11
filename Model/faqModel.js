@@ -10,10 +10,10 @@ const faqSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        category: {
+       type: {
             type: String,
-            //     enum: ["General", "Products", "Payments", "Shipping"],
-            //     required: true,
+                enum: ["Product", "Delivery", "Farm", "App"],
+                required: true,
         },
         isActive: {
             type: Boolean,

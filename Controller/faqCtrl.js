@@ -3,12 +3,15 @@ const Faq = require("../Model/faqModel");
 
 // Get all FAQs
 const getAllFaqs = async (req, res) => {
-    const faqs = await Faq.find();
-  
-    res.status(200).json({
-      success: true,
-      faqs,
-    });
+    const supportType = req.params.type;
+
+    try {
+      const supportData = await Faq.find({ type: supportType });
+      res.json(supportData);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while fetching support data.' });
+    }
   };
 
 // Get a specific FAQ by ID
@@ -29,7 +32,7 @@ const getFaqById = async (req, res) => {
 // Create a new FAQ
 const createFaq = async (req, res) => {
     console.log("hi");
-    const { question, answer } = req.body;
+    const { question, answer,type } = req.body;
     // try {
         if (!question || !answer) {
             return res.status(404).json(

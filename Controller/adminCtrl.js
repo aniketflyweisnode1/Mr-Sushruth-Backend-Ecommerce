@@ -118,15 +118,15 @@ exports.cancelOrder = async (req, res, next) => {
     }
 
     // Check if the order is in a cancelable state (e.g., 'pending' or 'shipped')
-    if (order.status !== 'pending' && order.status !== 'shipped') {
-      return res.status(400).json({ message: 'Order cannot be canceled' });
-    }
+    // if (order.status !== 'pending' && order.status !== 'shipped') {
+    //   return res.status(400).json({ message: 'Order cannot be canceled' });
+    // }
 
     // Update the order status to 'canceled'
     order.status = 'canceled';
     await order.save();
 
-    res.status(200).json({ message: 'Order canceled successfully' });
+    res.status(200).json({ message: 'Order canceled successfully',order });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while canceling the order' });

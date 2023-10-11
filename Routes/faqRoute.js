@@ -10,7 +10,7 @@ const {
 } = require("../Controller/faqCtrl");
 
 // Route for getting all FAQs
-router.get("/", getAllFaqs);
+router.get("/:type", getAllFaqs);
 
 // Route for getting a single FAQ by ID
 router.get("/:id", getFaqById);
