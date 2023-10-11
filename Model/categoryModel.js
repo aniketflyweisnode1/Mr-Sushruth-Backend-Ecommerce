@@ -6,9 +6,8 @@ const categorySchema = new mongoose.Schema({
     required: [true, "name Category Required"],
   },
   image: {
-        type: String,
-        required: true,
-    },
+    type: String
+},
   });
 
 module.exports = mongoose.model("Category", categorySchema);

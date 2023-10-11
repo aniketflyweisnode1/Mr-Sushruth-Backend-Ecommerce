@@ -3,26 +3,45 @@ const SubCategory = require("../Model/SubCategoryModel");
 
 const catchAsyncErrors = require("../Middleware/catchAsyncErrors");
 
-////////////////////////////////////////// CREATE CATEGORY  //////////////////////////////////
-
-const createCategory = catchAsyncErrors(async (req, res, next) => {
-  // const imagesLinks = await singleFileHandle(req.file,req);
-
-    // const name = req.file ? req.file.filename : null;
-    //  req.body.image = `${process.env.IMAGE_BASE_URL}/${req.file.filename}`
-  const data = {
-    name: req.body.name, 
-    image: req.body.image
-  }
-  console.log(data)
-  const category = await Category.create(data);
-  res.status(201).json({
-    // message : `${name} category created successfully`,
-    data: category,
-    status: 200
+///////////
+const imagePattern = "[^\\s]+(.*?)\\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$";
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({ 
+    cloud_name: 'dtijhcmaa', 
+    api_key: '624644714628939', 
+    api_secret: 'tU52wM1-XoaFD2NrHbPrkiVKZvY' 
   });
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "images/image",
+    allowed_formats: ["jpg", "jpeg", "png", "PNG", "xlsx", "xls", "pdf", "PDF"],
+  },
 });
+const upload = multer({ storage: storage });
 
+const createCategory = async (req, res) => {
+  try {
+    let findCategory = await Category.findOne({ name: req.body.name });
+    console.log(req.body.name)
+    if (findCategory) {
+      res.status(409).json({ message: "category already exit.", status: 404, data: {} });
+    } else {
+      upload.single("image")(req, res, async (err) => {
+        if (err) { return res.status(400).json({ msg: err.message }); }
+        const fileUrl = req.file ? req.file.path : "";
+        const data = { name: req.body.name, image: fileUrl };
+        const category = await Category.create(data);
+        res.status(200).json({ message: "category add successfully.", status: 200, data: category });
+      })
+    }
+
+  } catch (error) {
+    res.status(500).json({ status: 500, message: "internal server error ", data: error.message, });
+  }
+};
 ////////////////////////////////////////// UPDATE CATEGORY  //////////////////////////////////
 
 const updateCategory = catchAsyncErrors(async (req, res, next) => {
