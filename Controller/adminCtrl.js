@@ -5,6 +5,7 @@ const Brand = require("../Model/brandModel");
 const User = require("../Model/userModel");
 const { multipleFileHandle } = require("../utils/fileHandle");
 const token = require("../utils/Token")
+const Order = require("../Model/ShoppingCartOrderModel");
 
 exports.createBrand = catchAsyncErrors(async (req, res, next) => {
   const imagesLinks = await multipleFileHandle(req.files);
@@ -101,5 +102,33 @@ exports.deleteUser = async (req, res, next) => {
     });
   } catch (error) {
     res.status(200).json({ error: "Something went wrong when deleting user" });
+  }
+};
+
+
+exports.cancelOrder = async (req, res, next) => {
+  try {
+    const orderId = req.params.orderId;
+
+    // Find the order by ID
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Check if the order is in a cancelable state (e.g., 'pending' or 'shipped')
+    if (order.status !== 'pending' && order.status !== 'shipped') {
+      return res.status(400).json({ message: 'Order cannot be canceled' });
+    }
+
+    // Update the order status to 'canceled'
+    order.status = 'canceled';
+    await order.save();
+
+    res.status(200).json({ message: 'Order canceled successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while canceling the order' });
   }
 };

@@ -3,20 +3,13 @@ const Faq = require("../Model/faqModel");
 
 // Get all FAQs
 const getAllFaqs = async (req, res) => {
-    try {
-        let query = {};
-        if (req.query.category) {
-            query = { category: req.query.category };
-        }
-        const faqs = await Faq.find(query)
-            .lean()
-            .select({ _id: 1, question: 1, answer: 1 });
-        return res.status(200).json( " faqs retrieved successfully", faqs);
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json( "Error", err.message);
-    }
-};
+    const faqs = await Faq.find();
+  
+    res.status(200).json({
+      success: true,
+      faqs,
+    });
+  };
 
 // Get a specific FAQ by ID
 const getFaqById = async (req, res) => {
@@ -35,20 +28,22 @@ const getFaqById = async (req, res) => {
 
 // Create a new FAQ
 const createFaq = async (req, res) => {
+    console.log("hi");
     const { question, answer } = req.body;
-    try {
+    // try {
         if (!question || !answer) {
             return res.status(404).json(
                 "questions and answers cannot be blank"
             );
         }
         const faq = await Faq.create(req.body);
-        return createResponse(res, 201, "FAQ Added Successfully", faq);
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json( "Error", err.message);
-    }
-};
+        console.log("hi");
+        res.status(201).json({
+            success: true,
+            faq,
+          });
+        };
+      
 
 // Update an existing FAQ by ID
 const updateFaq = async (req, res) => {

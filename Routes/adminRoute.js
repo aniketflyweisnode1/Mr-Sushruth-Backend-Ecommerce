@@ -6,4 +6,6 @@ router.get("/user", admin.getAllUser);
 router.get("/:id", admin.getUserbyId);
 router.delete("/:id", admin.deleteUser);
 
+router.put("/cancel/:orderId", admin.cancelOrder);
+
 module.exports = router;
