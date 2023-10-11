@@ -13,6 +13,17 @@ const getAllFaqs = async (req, res) => {
       res.status(500).json({ error: 'An error occurred while fetching support data.' });
     }
   };
+  const getAll = async (req, res) => {
+    const supportType = req.params.type;
+
+    try {
+      const supportData = await Faq.find();
+      res.json(supportData);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while fetching support data.' });
+    }
+  };
 
 // Get a specific FAQ by ID
 const getFaqById = async (req, res) => {
@@ -81,6 +92,8 @@ const deleteFaq = async (req, res) => {
 
 module.exports = {
     getAllFaqs,
+    getAll,
+
     getFaqById,
     createFaq,
     updateFaq,

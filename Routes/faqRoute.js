@@ -3,6 +3,8 @@ const router = express.Router();
 
 const {
     getAllFaqs,
+    getAll,
+
     getFaqById,
     createFaq,
     updateFaq,
@@ -11,6 +13,7 @@ const {
 
 // Route for getting all FAQs
 router.get("/:type", getAllFaqs);
+router.get("/", getAll);
 
 // Route for getting a single FAQ by ID
 router.get("/:id", getFaqById);
