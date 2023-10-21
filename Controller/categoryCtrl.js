@@ -142,53 +142,53 @@ const getallCategory = catchAsyncErrors(async (req, res) => {
 ////////////////////////////////////////// CREATE SUB-CATEGORY  //////////////////////////////////
 
 const createSubCategory = catchAsyncErrors(async (req, res, next) => {
- // const name = req.file ? req.file.filename : null;
-  // try {
-  //   // req.body.image = `${process.env.IMAGE_BASE_URL}/${req.file.filename}`
-  //     const data = {
-  //   name: req.body.name, 
-  //   image: req.body.image
-  // }
-  //   console.log(req.body.image);
-  // const subCategory = await SubCategory.create(req.body);
-  // res.status(201).json({
-  //   success: true,
-  //   subCategory,
-  // });
-  // } catch (error) {
-  //     console.log(error);
-  //     res.status(400).json({
-  //     message: error.message
-  //   })
-  // }
-  
     try {
-    const { parentCategory, subCategory, image } = req.body;
-
-    // Check if the subcategory already exists
-    const existingSubCategory = await SubCategory.findOne({ subCategory });
-    if (existingSubCategory) {
-      return res.status(400).json({ message: "Subcategory already exists" });
-    }
-
-    const newSubCategory = new SubCategory({
-      parentCategory,
-      subCategory,
-      image,
+        let findSubCategorys = await SubCategory.findOne({ subCategory: req.body.subCategory });
+        console.log(req.body.subCategory)
+        if (findSubCategorys) {
+          res.status(409).json({ message: "SubCategory already exit.", status: 404, data: {} });
+        } else {
+          upload.single("image")(req, res, async (err) => {
+            if (err) { return res.status(400).json({ msg: err.message }); }
+            const fileUrl = req.file ? req.file.path : "";
+            const data = { parentCategory: req.body.parentCategory,subCategory: req.body.subCategory, image: fileUrl };
+            const SubCategorys = await SubCategory.create(data);
+            res.status(200).json({ message: "SubCategory add successfully.", status: 200, data: SubCategorys });
+          })
+        }
+    
+      } catch (error) {
+        res.status(500).json({ status: 500, message: "internal server error ", data: error.message, });
+      }
     });
+  
+  //   try {
+  //   const { parentCategory, subCategory, image } = req.body;
 
-    // Save the new subcategory to the database
-    const createdSubCategory = await newSubCategory.save();
+  //   // Check if the subcategory already exists
+  //   const existingSubCategory = await SubCategory.findOne({ subCategory });
+  //   if (existingSubCategory) {
+  //     return res.status(400).json({ message: "Subcategory already exists" });
+  //   }
 
-    res.status(201).json({
-      success: true,
-      subCategory: createdSubCategory,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+  //   const newSubCategory = new SubCategory({
+  //     parentCategory,
+  //     subCategory,
+  //     image,
+  //   });
+
+  //   // Save the new subcategory to the database
+  //   const createdSubCategory = await newSubCategory.save();
+
+  //   res.status(201).json({
+  //     success: true,
+  //     subCategory: createdSubCategory,
+  //   });
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ message: "Internal Server Error" });
+  // }
+// });
 
 ////////////////////////////////////////// TOTAL CATEGORY  //////////////////////////////////
 
