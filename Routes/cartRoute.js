@@ -1,4 +1,4 @@
-const { addToCart, getCart, updateQuantity, applyCoupon,deletProduct ,decreaseQty} = require("../Controller/cartCtrl");
+const { addToCart, getCart, updateQuantity,getAllCarts, applyCoupon,deletProduct ,getAllCart,decreaseQty} = require("../Controller/cartCtrl");
 const { isAuthenticatedUser } = require("../Middleware/auth");
 
 const router = require("express").Router();
@@ -10,6 +10,7 @@ router.put("/coupon", applyCoupon);
 router.put("/decrease/:productId", isAuthenticatedUser,decreaseQty);
 
 router.delete("/delete/:productId", isAuthenticatedUser,deletProduct);
+router.get("/all",getAllCarts);
 
 
 module.exports = router;  

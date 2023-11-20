@@ -317,3 +317,18 @@ exports.decreaseQty1 = async (req, res, next) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+  exports.getAllCarts = async (req, res, next) => {
+    try {
+      // Fetch all carts
+      const allCarts = await Cart.find().populate('user').populate('products.product'); // Adjust the population based on your model structure
+  
+      // Return the list of carts
+      res.status(200).json({ success: true, carts: allCarts });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  };
+
+ 

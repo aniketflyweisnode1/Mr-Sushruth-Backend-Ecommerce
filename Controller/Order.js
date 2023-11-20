@@ -354,6 +354,19 @@ const GetReturnByOrderId = async (req, res) => {
     })
   }
 }
+
+const getUnconfirmedOrders = async (req, res, next) => {
+  try {
+    // Fetch all orders with order status "unconfirmed"
+    const unconfirmedOrders = await Order.find({ orderStatus: 'processed',paymentStatus:'pending' })
+     
+    // Return the list of unconfirmed orders
+    res.status(200).json({ success: true, unconfirmedOrders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
 // const getAllOrders = catchAsyncErrors(async (req, res, next) => {
 //   const orders = await Order.find().populate({path: 'user', options: {strictPopulate: true}})
 
@@ -384,5 +397,6 @@ module.exports = {
   orderReturn,
   GetAllReturnOrderbyUserId,
   AllReturnOrder,
-  GetReturnByOrderId
+  GetReturnByOrderId,
+  getUnconfirmedOrders
 }
